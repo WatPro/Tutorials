@@ -1,0 +1,59 @@
+#!/usr/bin/perl 
+
+$oneDay = 24*60*60;
+
+sub readMMDD{
+    my $DOB  = $_[0]; 
+    my $MMDD = $DOB+0;
+    my $DD   = $MMDD%100; 
+    my $MM   = ($MMDD-$DD)/100; 
+    return ($MM,$DD); 
+}
+
+sub varify{
+    my $DOB    = @_[0]; 
+    my $maxMon =    12;
+    my @maxDay = (31,29,31,30,31,30,31,31,30,31,30,31);
+    unless ($DOB =~ /^[0-1][0-9][0-3][0-9]$/ ) {
+        return 0; 
+    }
+    my ($MM,$DD) = readMMDD($DOB); 
+    if ( $MM<1 || $MM>$maxMon ) {
+        return 0; 
+    } elsif ( $DD<1 || $DD>@maxDay[$MM-1] ) { 
+        return 0; 
+    }; 
+    return 1;  
+}
+
+if ( varify(@ARGV[0]) ) {
+    $DOB = @ARGV[0];
+} else {
+    print "What Date Is your Birthday? (MMDD): ";
+    $DOB = <STDIN>; 
+}
+
+if ( varify($DOB) ) { 
+    my ($MM,$DD) = readMMDD($DOB); 
+    $tt = time; 
+    $dd = 0; 
+    while (1) {
+        ($sec,$min,$hour,$mday,$mon,$year)
+          = localtime($tt+$dd*$oneDay);
+        if( $mon ==$MM-1 && $mday ==$DD ) {
+            last; 
+        }
+        $dd += 1;  
+    }
+    if ( $dd==0 ) {
+        print "Happy Birthday To You! \n"; 
+    } elsif ( $dd==1 ) {
+        print "Your Birthday Will Be Tomorrow. \n"
+    } elsif ( $dd>1 ) {
+        print "Your Birthday Will Be " . $dd . " Days Later. \n"
+    }
+} else {
+    print STDERR "Invalid Input!!!\n"
+}
+
+

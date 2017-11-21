@@ -1,0 +1,46 @@
+#!/usr/bin/lua
+
+oneday = 24*60*60
+away   = 0
+
+function read(MMDD)
+    local mmdd = tonumber(MMDD) 
+    local dd = mmdd%100 
+    local mm = (mmdd-dd)/100
+    return {MM=mm,DD=dd}
+end
+
+function verify(MMDD)
+    local mmdd = string.match(MMDD,'^[0-1][0-9][0-3][0-9]$') 
+    local max_mon = {31,29,31,30,31,30,31,31,30,31,30,31}
+    if mmdd == nil then 
+        return false
+    end
+    local mmdd = read(MMDD)
+    if (mmdd.MM<1) or (mmdd.MM>12) then
+        return false 
+    elseif (mmdd.DD<1) or (mmdd.DD>max_mon[mmdd.MM]) then 
+        return false
+    else 
+        return true 
+    end
+end
+
+if arg[1] == nil then 
+    MMDD = io.read()
+else 
+    MMDD = arg[1]
+end
+
+if verify(MMDD) then
+    NOW = os.time()
+    while os.date("%m%d",NOW+away*oneday) ~= MMDD do
+        away = away + 1 
+    end
+    io.write(away..'\n')
+else
+    io.stderr:write( 'Invalid Input!!! \n' )
+end
+
+
+
