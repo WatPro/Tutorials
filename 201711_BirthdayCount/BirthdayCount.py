@@ -3,7 +3,7 @@
 from sys import argv, stdin, stdout
 from datetime import date
 
-class BirthdayCal():
+class BirthdayCalculation():
     @classmethod
     def valid_date(cls, month, day):
         """Check If Input Date Is Valid 
@@ -20,7 +20,7 @@ class BirthdayCal():
         return True
  
     @classmethod
-    def calculation(cls, birthday_month, birthday_day): 
+    def calculator(cls, birthday_month, birthday_day): 
         """Calculate the number of days to the next birthday """
         date_today = date.today() 
         year = date_today.year
@@ -34,7 +34,7 @@ class BirthdayCal():
                     """Unexpected Exception """
                     return -1 
                 else: 
-                    if birthday > date_today: 
+                    if birthday >= date_today: 
                         return (birthday-date_today).days
                 year += 1
         else: 
@@ -90,15 +90,15 @@ class UserInterface():
                 
 
 if __name__ == "__main__": 
-    if len(argv)>=3 and argv[1].isdigit and argv[2].isdigit :
+    ui = UserInterface() 
+    if len(argv)>=3 and argv[1].isdigit() and argv[2].isdigit() :
         MM = int(argv[1])
         DD = int(argv[2])
     else: 
-        ui = UserInterface() 
         MMDD = ui.ask()
         if MMDD == None: 
             sys.exit()
         else: 
             (MM,DD) = MMDD
-    result = BirthdayCal.calculation(MM,DD) 
+    result = BirthdayCalculation.calculator(MM,DD) 
     ui.answer(result)
