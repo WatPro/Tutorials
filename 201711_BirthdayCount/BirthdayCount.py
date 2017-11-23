@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 ################################################################################
-########## Talk How Many Days You Have To Wait Until Your Birthday    ##########
+########## Tell How Many Days You Have To Wait Until Your Birthday    ##########
 ################################################################################
 
 

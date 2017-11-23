@@ -1,10 +1,23 @@
 #!/usr/bin/env python3
 
+################################################################################
+########## Test The Module BirthdayCount                              ##########
+################################################################################
+
+
+########## Import from standard libeary    ##########
 import unittest
 from unittest.mock import patch
-import BirthdayCount
-from BirthdayCount import BirthdayCalculation
 from datetime import date
+from io import StringIO
+
+########## Import from related third party ##########
+from pymongo import MongoClient
+
+########## Import the testing target       ##########
+import BirthdayCount
+from BirthdayCount import BirthdayCalculation, UserInterface
+
 
 class TestBirthdayCalculation(unittest.TestCase):
 
@@ -21,7 +34,23 @@ class TestBirthdayCalculation(unittest.TestCase):
             self.assertEqual(BirthdayCalculation.calculator(12,26), 7)
             self.assertEqual(BirthdayCalculation.calculator( 1, 1), 13)
             self.assertEqual(BirthdayCalculation.calculator( 2, 1), 44)
-        
+    
+
+class TestUserInterface(unittest.TestCase):
+    
+    def test_ask(self): 
+        UI_ui = UserInterface()
+        with patch('BirthdayCount.stdin', StringIO("1\n1\n")) , \
+             patch('BirthdayCount.stdout', new_callable=StringIO): 
+            self.assertEqual(UI_ui.ask(),(1,1))
+        with patch('BirthdayCount.stdin', StringIO("02\n29\n")), \
+             patch('BirthdayCount.stdout', new_callable=StringIO): 
+            self.assertEqual(UI_ui.ask(),(2,29))
+        with patch('BirthdayCount.stdin', StringIO("100\n100\n100\n100\n100\n100\n100\n")), \
+             patch('BirthdayCount.stdout', new_callable=StringIO): 
+            self.assertEqual(UI_ui.ask(),None)
 
 if __name__ == '__main__':
     unittest.main()
+    
+    
