@@ -1,13 +1,12 @@
+#!/usr/bin/env bash
 
+if [ ! -e junit-4.12.jar ] 
+then
+    curl -O http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar
+fi
 
+javac BirthdayCalculation.java
 
-time javac BirthdayCalculation.java
+javac -classpath '.:./junit-4.12.jar' Test_BirthdayCalculation.java
 
-time java BirthdayCalculation 1 1
-
-time java BirthdayCalculation 11 30
-
-time java BirthdayCalculation 2 29
-
-java BirthdayCalculation 
-
+java -classpath '.:./junit-4.12.jar:./hamcrest-core-1.3.jar' org.junit.runner.JUnitCore Test_BirthdayCalculation

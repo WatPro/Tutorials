@@ -12,7 +12,7 @@ public class BirthdayCalculation {
         this.month = 0;
         this.day   = 0;
     }
-    private BirthdayCalculation() {
+    BirthdayCalculation() {
         this.reset(); 
     }
     public boolean setMonth(int month) {
@@ -49,8 +49,8 @@ public class BirthdayCalculation {
         }
         return false; 
     }
-    public int calculator() {
-        if( setMonth(this.month) && setDay(this.day) ) {
+    public int calculator( int month, int day ) {
+        if( setMonth(month) && setDay(day) ) {
             Calendar date = Calendar.getInstance(); 
             for( int dd=0; dd<1000; dd+=1 ) { // 'dd<1000' could be set to 'true' 
                 if( isBirthday(date) ) {
@@ -59,7 +59,16 @@ public class BirthdayCalculation {
                 date.add(Calendar.DAY_OF_MONTH, 1); 
             }
         } 
+        reset(); 
         return -1; 
+    }
+    public int calculator() {
+        int month=this.month;
+        int day=this.day; 
+        int ans = calculator(this.month, this.day);
+        this.month=month;
+        this.day=day; 
+        return ans; 
     }
     public static void main(String[] args) {
         BirthdayCalculation BC_bc = new BirthdayCalculation();
