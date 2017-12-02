@@ -49,6 +49,12 @@ public class BirthdayCalculation {
         }
         return false; 
     }
+/******************************************************************************/
+/* As of Mockito 2.x, static methods such as Calendar.getInstance() cannot be */
+/* mocked, neither can private methods.                                       */
+/******************************************************************************/
+/* ORIGINAL:                                                                  */
+/*
     public int calculator( int month, int day ) {
         if( setMonth(month) && setDay(day) ) {
             Calendar date = Calendar.getInstance(); 
@@ -62,6 +68,27 @@ public class BirthdayCalculation {
         reset(); 
         return -1; 
     }
+/* END OF ORIGINAL                                                            */
+/******************************************************************************/
+/* REPLACEMENT:                                                               */
+    public Calendar getToday() { 
+        return Calendar.getInstance();
+    }
+    public int calculator( int month, int day ) {
+        if( setMonth(month) && setDay(day) ) {
+            Calendar date = getToday(); 
+            for( int dd=0; dd<1000; dd+=1 ) { // 'dd<1000' could be set to 'true' 
+                if( isBirthday(date) ) {
+                    return dd; 
+                } 
+                date.add(Calendar.DAY_OF_MONTH, 1); 
+            }
+        } 
+        reset(); 
+        return -1; 
+    }
+/* END OF REPLACEMENT:                                                        */
+/******************************************************************************/
     public int calculator() {
         int month=this.month;
         int day=this.day; 
