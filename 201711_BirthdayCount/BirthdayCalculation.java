@@ -51,7 +51,10 @@ public class BirthdayCalculation {
     }
 /******************************************************************************/
 /* As of Mockito 2.x, static methods such as Calendar.getInstance() cannot be */
-/* mocked, neither can private methods.                                       */
+/* mocked, neither can private methods. See the limitations on:               */
+/*   https://github.com/mockito/mockito/wiki/FAQ                              */
+/* A simple workaround adopted here is using a public method to wrap the      */
+/* static Calendar.getInstance(), and the method would be spied/mocked.       */
 /******************************************************************************/
 /* ORIGINAL:                                                                  */
 /*
@@ -87,7 +90,7 @@ public class BirthdayCalculation {
         reset(); 
         return -1; 
     }
-/* END OF REPLACEMENT:                                                        */
+/* END OF REPLACEMENT                                                         */
 /******************************************************************************/
     public int calculator() {
         int month=this.month;
