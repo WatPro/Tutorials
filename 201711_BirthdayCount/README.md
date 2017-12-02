@@ -5,7 +5,7 @@ This exercise evolves for quality assurance purposes, and concludes in the idea 
 Practice Question:
 
 ```
-Calculate the number of days between today and a given birthday. 
+Calculate the number of days between today and a coming birthday. 
 ```
 
 ### BirthdayCount 
