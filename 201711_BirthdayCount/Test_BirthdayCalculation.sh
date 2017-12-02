@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+################################################################################
+########## Run on CentOS 7.3                                          ##########
+################################################################################
+
 JUNIT4_URL=http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar
 JUNIT4_JAR=${JUNIT4_URL##*/}
 HARMCREST_URL='http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'
@@ -42,6 +46,7 @@ fi
 
 if [ ! -e "$OBJENESIS_JAR" ]
 then
+    yum --assumeyes install unzip
     curl --location "$OBJENESIS_URL" -o "$OBJENESIS_ZIP"
     unzip -j "$OBJENESIS_ZIP" "$OBJENESIS_ZPATH"
     rm --force "$OBJENESIS_ZIP"
