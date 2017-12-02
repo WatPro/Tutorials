@@ -34,7 +34,7 @@ Java is a hard promoter of object-oriented design. If this idea is followed, an 
 
 * Calculator: find out the coming birthday, given DOB (from Person); calculator the difference between current date (from Time Manager) and that birthday
 
-When the program is tested, the Time Manager would be mocked, so there will be certain results anytime. Completely adopting this idea to finish a simple task is controversial, and here only a class was written up (BirthdayCalculation) to fulfil a task. 
+When the program is tested, the Time Manager would be mocked, so there will be certain results anytime. Completely adopting this idea to finish a simple task is controversial, and here only a class was written up (BirthdayCalculation) to fulfil the task. 
  
 Shell script `Test_BirthdayCalculation.sh` helps run tests. 
  
