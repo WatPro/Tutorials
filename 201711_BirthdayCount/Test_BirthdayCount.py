@@ -21,19 +21,117 @@ from BirthdayCount import BirthdayCalculation as BC, UserInterface as UI
 
 class TestBirthdayCalculation(unittest.TestCase):
 
+    def __test_calculator(self,data): 
+        with patch('BirthdayCount.date') as mock_date:
+            mock_date.side_effect = lambda *args, **kw: date(*args, **kw) 
+            mock_date.today.return_value = date(
+                data['premise']['today_year'], 
+                data['premise']['today_month'], 
+                data['premise']['today_day']
+            )
+            self.assertEqual(
+                BC.calculator(data['input']['DOB_month'],data['input']['DOB_day']), 
+                data['expect']['ans']
+            ) 
+
     def test_calculator(self):
-        with patch('BirthdayCount.date') as mock_date: 
-            mock_date.side_effect = lambda *args, **kw: date(*args, **kw)
-            mock_date.today.return_value = date(2017, 11, 15)
-            self.assertEqual(BC.calculator(11,15), 0)
-            self.assertEqual(BC.calculator(11,16), 1)
-            self.assertEqual(BC.calculator(11,17), 2)
-            self.assertEqual(BC.calculator(11,18), 3)
-            mock_date.today.return_value = date(2017, 12, 19)
-            self.assertEqual(BC.calculator(12,19), 0)
-            self.assertEqual(BC.calculator(12,26), 7)
-            self.assertEqual(BC.calculator( 1, 1), 13)
-            self.assertEqual(BC.calculator( 2, 1), 44)
+        data = [
+            {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 11, 
+                    'today_day': 15
+                }, 
+                'input':{
+                    'DOB_month': 11, 
+                    'DOB_day': 15
+                }, 
+                'expect':{
+                    'ans': 0
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 11, 
+                    'today_day': 15
+                }, 
+                'input':{
+                    'DOB_month': 11, 
+                    'DOB_day': 16
+                }, 
+                'expect':{
+                    'ans': 1
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 11, 
+                    'today_day': 15
+                }, 
+                'input':{
+                    'DOB_month': 11, 
+                    'DOB_day': 17
+                }, 
+                'expect':{
+                    'ans': 2
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 12, 
+                    'today_day': 19
+                }, 
+                'input':{
+                    'DOB_month': 12, 
+                    'DOB_day': 19
+                }, 
+                'expect':{
+                    'ans': 0
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 12, 
+                    'today_day': 19
+                }, 
+                'input':{
+                    'DOB_month': 12, 
+                    'DOB_day': 26
+                }, 
+                'expect':{
+                    'ans': 7
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 12, 
+                    'today_day': 19
+                }, 
+                'input':{
+                    'DOB_month': 1, 
+                    'DOB_day': 1
+                }, 
+                'expect':{
+                    'ans': 13
+                }
+            }, {
+                'premise':{
+                    'today_year': 2017,
+                    'today_month': 12, 
+                    'today_day': 19
+                }, 
+                'input':{
+                    'DOB_month': 2, 
+                    'DOB_day': 1
+                }, 
+                'expect':{
+                    'ans': 44
+                }
+            }
+        ]
+        for each in data: 
+            with self.subTest('test_calculator'):
+                self.__test_calculator(each)
     
 
 class TestUserInterface(unittest.TestCase):
@@ -51,6 +149,6 @@ class TestUserInterface(unittest.TestCase):
             self.assertEqual(UI_ui.ask(),None)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
     
     
