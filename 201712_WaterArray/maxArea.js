@@ -5,7 +5,7 @@
 var maxArea = function(height) {
     let ss = {}; 
     let maxh = -1;
-    for(let ii=0; ii<height.length; ii+=1) {
+    for(let ii=0, nn=height.length; ii<nn; ii+=1) { // using nn here instead of obtaining height.length every time improves a lot. 
         let h = height[ii]; 
         if( h>maxh ){
             maxh = h; 
@@ -29,22 +29,15 @@ var maxArea = function(height) {
             continue;
         }
         let mm = ss[h];
-        let aa = [(mm.max-mm.min)*h];
-        if( top.min<mm.min ) {
-            aa.push([(mm.max-top.min)*h]);
-        }
-        if( mm.max<top.max ) {
-            aa.push([(top.max-mm.min)*h]);
-        }
-        aaa = Math.max(...aa); 
-        if( aaa>area ) {
-            area = aaa; 
-        }
         if( mm.min<top.min ){
             top.min = mm.min; 
         }
         if( top.max<mm.max ){
             top.max = mm.max; 
+        }
+        let harea = (top.max-top.min)*h;
+        if( harea>area ) {
+            area = harea; 
         }
     }
     return area;
