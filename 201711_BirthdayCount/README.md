@@ -44,3 +44,4 @@ The date of today is mocked so that the test script `Test_BirthdayCount.py` is r
 
 Mocking is conducted more naturally compared to the one in Java. This dues mainly to the fact that Python is more a scripting language than a programming language (as Java). 
  
+## This folder was concluded. Please refer to [JSONwrite](https://github.com/WatPro/JSONwrite "Repository JSONwrite")/[example](https://github.com/WatPro/JSONwrite/tree/master/example "Birthday Count Example") for future development. 
