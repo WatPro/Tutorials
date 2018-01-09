@@ -19,7 +19,10 @@ local proto_fields = {
     func   = ProtoField.uint16("gate.function", "Function", base.HEX, {
         [0x1081] = "Get A Record "
     }), 
-    check  = ProtoField.uint16("gate.check", "Checksum", base.HEX), 
+    check  = ProtoField.bool("gate.check", "Checksum", base.NONE, {
+        [1] = "Passed", 
+        [2] = "Failed"
+    }), 
     ends   = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
         [0x0d] = "Correct Ending Byte"
     }) 
@@ -47,10 +50,8 @@ function general_dissector(buffer, pinfo, tree)
     check = buffer(31,1):uint()+256*buffer(32,1):uint()
     data  = buffer(1,30)
     tree:add(proto_fields.func, buffer(3,2), cmd) 
-    tree:add(proto_fields.check, buffer(31,2), check, nil, 
-        (check == Checksum(data)) and "(passed)" or "(failed)"
-    ) 
-    tree:add(proto_fields.ends, buffer(32,1), buffer(33,1):uint())
+    tree:add(proto_fields.check, buffer(31,2), check == Checksum(data), nil, "("..string.format("%X",check)..")") 
+    tree:add(proto_fields.ends, buffer(33,1), buffer(33,1):uint())
 end 
 
 function Checksum(buffer)
