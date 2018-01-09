@@ -17,7 +17,7 @@ local proto_fields = {
     }), 
     serial = ProtoField.uint16("gate.sn", "Board Serial Number", base.DEC), 
     func   = ProtoField.uint16("gate.function", "Function", base.HEX, {
-        [0x1081] = "Get A Record "
+        [0x1081] = "Get Status"
     }), 
     check  = ProtoField.bool("gate.check", "Checksum", base.NONE, {
         [1] = "Passed", 
@@ -48,10 +48,17 @@ function general_dissector(buffer, pinfo, tree)
     tree:add(proto_fields.serial, buffer(1,2), buffer(1,1):uint()+256*buffer(2,1):uint())
     cmd   = buffer(3,1):uint()+256*buffer(4,1):uint()
     check = buffer(31,1):uint()+256*buffer(32,1):uint()
-    data  = buffer(1,30)
-    tree:add(proto_fields.func, buffer(3,2), cmd) 
+    data  = buffer(1,30) 
     tree:add(proto_fields.check, buffer(31,2), check == Checksum(data), nil, "("..string.format("%X",check)..")") 
-    tree:add(proto_fields.ends, buffer(33,1), buffer(33,1):uint())
+    tree:add(proto_fields.ends, buffer(33,1), buffer(33,1):uint()) 
+    subtree = tree:add(proto_fields.func, buffer(3,2), cmd) 
+    if     cmd == 0x1081 then get_status(buffer, pinfo, subtree) 
+    else
+    end
+end 
+
+function get_status(buffer, pinfo, tree)
+    
 end 
 
 function Checksum(buffer)
@@ -59,7 +66,7 @@ function Checksum(buffer)
     local sum    = 0
     for ii=0,length-1,1
     do 
-          sum = sum + buffer(ii,1):uint() 
+        sum = sum + buffer(ii,1):uint() 
     end 
     return sum
 end 
