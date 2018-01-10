@@ -11,23 +11,34 @@ local default_settings =
 local gate_proto = Proto("GATE", "Gate Control ")
   
 local proto_fields = { 
-    length = ProtoField.uint32("gate.length", "UDP Length", base.DEC), 
-    begin  = ProtoField.uint8("gate.begin", "Begin Of Section", base.HEX, {
+    length     = ProtoField.uint32("gate.length", "UDP Length", base.DEC), 
+    begin      = ProtoField.uint8("gate.begin", "Begin Of Section", base.HEX, {
         [0x7e] = "Correct Beginning Byte"
     }), 
-    serial = ProtoField.uint16("gate.sn", "Board Serial Number", base.DEC), 
-    func   = ProtoField.uint16("gate.function", "Function", base.HEX, {
+    serial     = ProtoField.uint16("gate.sn", "Board Serial Number", base.DEC), 
+    func       = ProtoField.uint16("gate.function", "Function", base.HEX, {
         [0x1081] = "Get Status"
     }), 
-    check  = ProtoField.bool("gate.check", "Checksum", base.NONE, {
+    check      = ProtoField.bool("gate.check", "Checksum", base.NONE, {
         [1] = "Passed", 
         [2] = "Failed"
     }), 
-    ends   = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
+    ends       = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
         [0x0d] = "Correct Ending Byte"
     }), 
-    record = ProtoField.uint32("gate.length", "Record Index", base.DEC), 
-    time   = ProtoField.uint32("gate.time", "Date(Board)", base.DEC)
+    record     = ProtoField.uint32("gate.length", "Record Index", base.DEC), 
+    time       = ProtoField.uint32("gate.time", "Date(Board)", base.DEC),
+    day        = ProtoField.uint8("gate.day", "Weekday(Board)", base.DEC, {
+        [0] = "Sunday", 
+        [1] = "Monday", 
+        [2] = "Tuesday", 
+        [3] = "Wednesday", 
+        [4] = "Thursday",
+        [5] = "Friday", 
+        [6] = "Saturday"
+    }), 
+    tot_record = ProtoField.uint32("gate.tot_record", "Total Number of Records", base.DEC), 
+    tot_reg    = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC)
 }
 gate_proto.fields = proto_fields
 
@@ -61,13 +72,15 @@ end
 
 function get_status(buffer, pinfo, tree)
     if     pinfo.src_port == default_settings.port and pinfo.dst_port ~= default_settings.port then 
-        local year     = buffer(5,1):uint() 
-        local month    = buffer(6,1):uint() 
-        local day      = buffer(7,1):uint() 
-        local hour     = buffer(9,1):uint() 
-        local min      = buffer(10,1):uint()
-        local sec      = buffer(11,1):uint()
-        local datetime = os.time({
+        local year        = readBCD(buffer(5,1):uint())
+        local month       = readBCD(buffer(6,1):uint()) 
+        local day         = readBCD(buffer(7,1):uint()) 
+        local wday_buff   = buffer(8,1)
+        local weekday     = readBCD(wday_buff:uint()) 
+        local hour        = readBCD(buffer(9,1):uint()) 
+        local min         = readBCD(buffer(10,1):uint())
+        local sec         = readBCD(buffer(11,1):uint())
+        local datetime    = os.time({
             year  = 2000+year, 
             month = month, 
             day   = day, 
@@ -75,7 +88,15 @@ function get_status(buffer, pinfo, tree)
             min   = min, 
             sec   = sec
         })
+        local wday_match  = weekday == os.date("*t", datetime).wday-1
         tree:add(proto_fields.time, buffer(5,7), datetime, nil, "("..os.date("%Y-%m-%d %X", datetime)..")")
+        tree:add(proto_fields.day, wday_buff, weekday, nil, wday_match and "Matched" or "Not Matched")
+        local tot_rc_buff = buffer(12,3)
+        local tot_record  = readLH(tot_rc_buff)
+        tree:add(proto_fields.tot_record, tot_rc_buff, tot_record)
+        local tot_rg_buff = buffer(15,2)
+        local tot_reg     = readLH(tot_rg_buff)
+        tree:add(proto_fields.tot_reg, tot_rg_buff, tot_reg)
     elseif pinfo.src_port ~= default_settings.port and pinfo.dst_port == default_settings.port then 
         local record_buffer = buffer(5,4)
         local record        = readLH(record_buffer)
@@ -88,9 +109,9 @@ function get_status(buffer, pinfo, tree)
 end 
 
 function Checksum(buffer)
-    local length = buffer:len()
-    local sum    = 0
-    for ii=0,length-1,1
+    local ll  = buffer:len()
+    local sum = 0
+    for ii=ll-1,0,-1
     do 
         sum = sum + buffer(ii,1):uint() 
     end 
@@ -106,6 +127,11 @@ function readLH(buffer)
         result = result + buffer(ii,1):uint()
     end 
     return result 
+end 
+ 
+function readBCD(uint8) 
+-- Binary-Coded Decimal
+     return math.floor(uint8/0x10)*10 + uint8%0x10
 end 
  
 local udp_table = DissectorTable.get("udp.port")
