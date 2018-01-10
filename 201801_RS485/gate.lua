@@ -38,7 +38,8 @@ local proto_fields = {
         [6] = "Saturday"
     }), 
     tot_record = ProtoField.uint32("gate.tot_record", "Total Number of Records", base.DEC), 
-    tot_reg    = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC)
+    tot_reg    = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC), 
+    card       = ProtoField.uint32("gate.card", "Card ID", base.DEC)
 }
 gate_proto.fields = proto_fields
 
