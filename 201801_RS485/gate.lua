@@ -25,7 +25,9 @@ local proto_fields = {
     }), 
     ends   = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
         [0x0d] = "Correct Ending Byte"
-    }) 
+    }), 
+    record = ProtoField.uint32("gate.length", "Record Index", base.DEC), 
+    time   = ProtoField.uint32("gate.time", "Date(Board)", base.DEC)
 }
 gate_proto.fields = proto_fields
 
@@ -45,9 +47,9 @@ end
 function general_dissector(buffer, pinfo, tree) 
     local cmd, check, data
     tree:add(proto_fields.begin, buffer(0,1), buffer(0,1):uint())
-    tree:add(proto_fields.serial, buffer(1,2), buffer(1,1):uint()+256*buffer(2,1):uint())
-    cmd   = buffer(3,1):uint()+256*buffer(4,1):uint()
-    check = buffer(31,1):uint()+256*buffer(32,1):uint()
+    tree:add(proto_fields.serial, buffer(1,2), buffer(1,1):uint()+0x100*buffer(2,1):uint())
+    cmd   = buffer(3,1):uint()+0x100*buffer(4,1):uint()
+    check = buffer(31,1):uint()+0x100*buffer(32,1):uint()
     data  = buffer(1,30) 
     tree:add(proto_fields.check, buffer(31,2), check == Checksum(data), nil, "("..string.format("%X",check)..")") 
     tree:add(proto_fields.ends, buffer(33,1), buffer(33,1):uint()) 
@@ -58,7 +60,31 @@ function general_dissector(buffer, pinfo, tree)
 end 
 
 function get_status(buffer, pinfo, tree)
-    
+    if     pinfo.src_port == default_settings.port and pinfo.dst_port ~= default_settings.port then 
+        local year     = buffer(5,1):uint() 
+        local month    = buffer(6,1):uint() 
+        local day      = buffer(7,1):uint() 
+        local hour     = buffer(9,1):uint() 
+        local min      = buffer(10,1):uint()
+        local sec      = buffer(11,1):uint()
+        local datetime = os.time({
+            year  = 2000+year, 
+            month = month, 
+            day   = day, 
+            hour  = hour, 
+            min   = min, 
+            sec   = sec
+        })
+        tree:add(proto_fields.time, buffer(5,7), datetime, nil, "("..os.date("%Y-%m-%d %X", datetime)..")")
+    elseif pinfo.src_port ~= default_settings.port and pinfo.dst_port == default_settings.port then 
+        local record_buffer = buffer(5,4)
+        local record        = readLH(record_buffer)
+        if record == 0x0 or record == 0xffffffff then 
+            tree:add(proto_fields.record, record_buffer, record, nil, "(Get The Newest Record)")
+        else
+            tree:add(proto_fields.record, record_buffer, record)
+        end 
+    end 
 end 
 
 function Checksum(buffer)
@@ -69,6 +95,17 @@ function Checksum(buffer)
         sum = sum + buffer(ii,1):uint() 
     end 
     return sum
+end 
+
+function readLH(buffer)
+    local ll     = buffer:len()
+    local result = 0
+    for ii=ll-1,0,-1
+    do 
+        result = 0x100*result
+        result = result + buffer(ii,1):uint()
+    end 
+    return result 
 end 
  
 local udp_table = DissectorTable.get("udp.port")
