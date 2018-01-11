@@ -38,7 +38,7 @@ local proto_fields = {
         [6] = "Saturday"
     }), 
     tot_record = ProtoField.uint32("gate.tot_record", "Total Number of Records", base.DEC), 
-    tot_reg    = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC), 
+    tot_regist = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC), 
     card       = ProtoField.uint32("gate.card", "Card ID", base.DEC)
 }
 gate_proto.fields = proto_fields
@@ -57,14 +57,19 @@ function gate_proto.dissector(buffer, pinfo, tree)
 end 
 
 function general_dissector(buffer, pinfo, tree) 
-    local cmd, check, data
-    tree:add(proto_fields.begin, buffer(0,1), buffer(0,1):uint())
-    tree:add(proto_fields.serial, buffer(1,2), buffer(1,1):uint()+0x100*buffer(2,1):uint())
-    cmd   = buffer(3,1):uint()+0x100*buffer(4,1):uint()
-    check = buffer(31,1):uint()+0x100*buffer(32,1):uint()
+    local data
+    local begin_buffer  = buffer(0,1)
+    local ends_buffer   = buffer(33,1)
+    local serial_buffer = buffer(1,2)
+    local serial        = readLH(serial_buffer )
+    local cmd_buffer    = buffer(3,2)
+    local cmd           = readLH(cmd_buffer) 
+    tree:add(proto_fields.begin, begin_buffer, begin_buffer:uint())
+    tree:add(proto_fields.serial, serial_buffer, serial)
+    local check = readLH(buffer(31,2)) 
     data  = buffer(1,30) 
     tree:add(proto_fields.check, buffer(31,2), check == Checksum(data), nil, "("..string.format("%X",check)..")") 
-    tree:add(proto_fields.ends, buffer(33,1), buffer(33,1):uint()) 
+    tree:add(proto_fields.ends, ends_buffer, ends_buffer:uint()) 
     subtree = tree:add(proto_fields.func, buffer(3,2), cmd) 
     if     cmd == 0x1081 then get_status(buffer, pinfo, subtree) 
     else
@@ -73,31 +78,17 @@ end
 
 function get_status(buffer, pinfo, tree)
     if     pinfo.src_port == default_settings.port and pinfo.dst_port ~= default_settings.port then 
-        local year        = readBCD(buffer(5,1):uint())
-        local month       = readBCD(buffer(6,1):uint()) 
-        local day         = readBCD(buffer(7,1):uint()) 
-        local wday_buff   = buffer(8,1)
-        local weekday     = readBCD(wday_buff:uint()) 
-        local hour        = readBCD(buffer(9,1):uint()) 
-        local min         = readBCD(buffer(10,1):uint())
-        local sec         = readBCD(buffer(11,1):uint())
-        local datetime    = os.time({
-            year  = 2000+year, 
-            month = month, 
-            day   = day, 
-            hour  = hour, 
-            min   = min, 
-            sec   = sec
-        })
-        local wday_match  = weekday == os.date("*t", datetime).wday-1
-        tree:add(proto_fields.time, buffer(5,7), datetime, nil, "("..os.date("%Y-%m-%d %X", datetime)..")")
-        tree:add(proto_fields.day, wday_buff, weekday, nil, wday_match and "Matched" or "Not Matched")
-        local tot_rc_buff = buffer(12,3)
-        local tot_record  = readLH(tot_rc_buff)
-        tree:add(proto_fields.tot_record, tot_rc_buff, tot_record)
-        local tot_rg_buff = buffer(15,2)
-        local tot_reg     = readLH(tot_rg_buff)
-        tree:add(proto_fields.tot_reg, tot_rg_buff, tot_reg)
+        local datetime_buffer = buffer(5,7)
+        local datetime, weekday, wday_buffer, wday_match 
+                              = datetime_BCD(datetime_buffer) 
+        local tot_record_buff = buffer(12,3)
+        local tot_record      = readLH(tot_record_buff)
+        local tot_regist_buff     = buffer(15,2)
+        local tot_regist         = readLH(tot_regist_buff)
+        tree:add(proto_fields.time, datetime_buffer, datetime, nil, "("..os.date("%Y-%m-%d %X", datetime)..")")
+        tree:add(proto_fields.day, wday_buffer, weekday, nil, wday_match and "Matched" or "Not Matched")
+        tree:add(proto_fields.tot_record, tot_record_buff, tot_record)
+        tree:add(proto_fields.tot_regist, tot_regist_buff, tot_regist)
     elseif pinfo.src_port ~= default_settings.port and pinfo.dst_port == default_settings.port then 
         local record_buffer = buffer(5,4)
         local record        = readLH(record_buffer)
@@ -117,6 +108,27 @@ function Checksum(buffer)
         sum = sum + buffer(ii,1):uint() 
     end 
     return sum
+end 
+
+function datetime_BCD(buffer) 
+    local year         = readBCD(buffer(0,1):uint())
+    local month        = readBCD(buffer(1,1):uint()) 
+    local day          = readBCD(buffer(2,1):uint()) 
+    local wday_buffer  = buffer(3,1)
+    local weekday      = readBCD(wday_buffer:uint()) 
+    local hour         = readBCD(buffer(4,1):uint()) 
+    local min          = readBCD(buffer(5,1):uint())
+    local sec          = readBCD(buffer(6,1):uint())
+    local datetime     = os.time({
+        year  = 2000+year, 
+        month = month, 
+        day   = day, 
+        hour  = hour, 
+        min   = min, 
+        sec   = sec
+    })
+    local wday_match   = weekday == os.date("*t", datetime).wday-1
+    return datetime, weekday, wday_buffer, wday_match
 end 
 
 function readLH(buffer)
