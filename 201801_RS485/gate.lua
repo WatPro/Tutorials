@@ -11,24 +11,24 @@ local default_settings =
 local gate_proto = Proto("GATE", "Gate Control ")
   
 local proto_fields = { 
-    length     = ProtoField.uint32("gate.length", "UDP Length", base.DEC), 
-    begin      = ProtoField.uint8("gate.begin", "Begin Of Section", base.HEX, {
+    length       = ProtoField.uint32("gate.length", "UDP Length", base.DEC), 
+    begin        = ProtoField.uint8("gate.begin", "Begin Of Section", base.HEX, {
         [0x7e] = "Correct Beginning Byte"
     }), 
-    serial     = ProtoField.uint16("gate.sn", "Board Serial Number", base.DEC), 
-    func       = ProtoField.uint16("gate.function", "Function", base.HEX, {
+    serial       = ProtoField.uint16("gate.sn", "Board Serial Number", base.DEC), 
+    func         = ProtoField.uint16("gate.function", "Function", base.HEX, {
         [0x1081] = "Get Status"
     }), 
-    check      = ProtoField.bool("gate.check", "Checksum", base.NONE, {
+    check        = ProtoField.bool("gate.check", "Checksum", base.NONE, {
         [1] = "Passed", 
         [2] = "Failed"
     }), 
-    ends       = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
-        [0x0d] = "Correct Ending Byte"
+    ends             = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
+        [0x0d]       = "Correct Ending Byte"
     }), 
-    record     = ProtoField.uint32("gate.record", "Record Index", base.DEC), 
-    time       = ProtoField.uint32("gate.time", "Date(Board)", base.DEC),
-    day        = ProtoField.uint8("gate.day", "Weekday(Board)", base.DEC, {
+    record_index     = ProtoField.uint32("gate.record_index", "Record Index", base.DEC), 
+    time             = ProtoField.uint32("gate.time", "Date(Board)", base.DEC),
+    day              = ProtoField.uint8("gate.day", "Weekday(Board)", base.DEC, {
         [0] = "Sunday", 
         [1] = "Monday", 
         [2] = "Tuesday", 
@@ -37,9 +37,11 @@ local proto_fields = {
         [5] = "Friday", 
         [6] = "Saturday"
     }), 
-    tot_record = ProtoField.uint32("gate.tot_record", "Total Number of Records", base.DEC), 
-    tot_regist = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC), 
-    card       = ProtoField.uint32("gate.card", "Card ID", base.DEC)
+    tot_record       = ProtoField.uint32("gate.tot_record", "Total Number of Records", base.DEC), 
+    tot_regist       = ProtoField.uint16("gate.registration", "Total Number of Registrations", base.DEC), 
+    record_card      = ProtoField.uint32("gate.record.card", "Card ID", base.DEC),
+    record_datetime  = ProtoField.uint32("gate.record.datetime", "Record Time", base.DEC), 
+    record_weekday   = ProtoField.uint8("gate.record.weekday", "Record Weekday", base.DEC)
 }
 gate_proto.fields = proto_fields
 
@@ -78,24 +80,27 @@ end
 
 function get_status(buffer, pinfo, tree)
     if     pinfo.src_port == default_settings.port and pinfo.dst_port ~= default_settings.port then 
-        local datetime_buffer = buffer(5,7)
+        local datetime_buffer  = buffer(5,7)
         local datetime, weekday, wday_buffer, wday_match 
-                              = datetime_BCD(datetime_buffer) 
-        local tot_record_buff = buffer(12,3)
-        local tot_record      = readLH(tot_record_buff)
-        local tot_regist_buff     = buffer(15,2)
-        local tot_regist         = readLH(tot_regist_buff)
+                               = datetime_BCD(datetime_buffer) 
+        local tot_record_buff  = buffer(12,3)
+        local tot_record       = readLH(tot_record_buff)
+        local tot_regist_buff  = buffer(15,2)
+        local tot_regist       = readLH(tot_regist_buff)
+        local record_buffer    = buffer(17,9)
+        local record_card, record_date, record_time
         tree:add(proto_fields.time, datetime_buffer, datetime, nil, "("..os.date("%Y-%m-%d %X", datetime)..")")
         tree:add(proto_fields.day, wday_buffer, weekday, nil, wday_match and "Matched" or "Not Matched")
         tree:add(proto_fields.tot_record, tot_record_buff, tot_record)
         tree:add(proto_fields.tot_regist, tot_regist_buff, tot_regist)
+        record_info(record_buffer, tree) 
     elseif pinfo.src_port ~= default_settings.port and pinfo.dst_port == default_settings.port then 
         local record_buffer = buffer(5,4)
-        local record        = readLH(record_buffer)
+        local record_index  = readLH(record_buffer)
         if record == 0x0 or record == 0xffffffff then 
-            tree:add(proto_fields.record, record_buffer, record, nil, "(Get The Newest Record)")
+            tree:add(proto_fields.record_index, record_buffer, record_index, nil, "(Get The Newest Record)")
         else
-            tree:add(proto_fields.record, record_buffer, record)
+            tree:add(proto_fields.record_index, record_buffer, record_index)
         end 
     end 
 end 
@@ -129,6 +134,12 @@ function datetime_BCD(buffer)
     })
     local wday_match   = weekday == os.date("*t", datetime).wday-1
     return datetime, weekday, wday_buffer, wday_match
+end 
+
+function record_info(buffer, tree) 
+    local card_buffer = buffer(0,4) 
+    local card        = readLH(card_buffer)
+    local subtree     = tree:add(proto_fields.record_card, card_buffer, card)
 end 
 
 function readLH(buffer)
