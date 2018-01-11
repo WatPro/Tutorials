@@ -26,7 +26,7 @@ local proto_fields = {
     ends       = ProtoField.uint8("gate.end", "End Of Section", base.HEX, {
         [0x0d] = "Correct Ending Byte"
     }), 
-    record     = ProtoField.uint32("gate.length", "Record Index", base.DEC), 
+    record     = ProtoField.uint32("gate.record", "Record Index", base.DEC), 
     time       = ProtoField.uint32("gate.time", "Date(Board)", base.DEC),
     day        = ProtoField.uint8("gate.day", "Weekday(Board)", base.DEC, {
         [0] = "Sunday", 
