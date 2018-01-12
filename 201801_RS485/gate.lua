@@ -70,7 +70,7 @@ function general_dissector(buffer, pinfo, tree)
     tree:add(proto_fields.serial, serial_buffer, serial)
     local check = readLH(buffer(31,2)) 
     data  = buffer(1,30) 
-    tree:add(proto_fields.check, buffer(31,2), check == Checksum(data), nil, "("..string.format("%X",check)..")") 
+    tree:add(proto_fields.check, buffer(31,2), check == checksum(data), nil, "("..string.format("%X",check)..")") 
     tree:add(proto_fields.ends, ends_buffer, ends_buffer:uint()) 
     subtree = tree:add(proto_fields.func, buffer(3,2), cmd) 
     if     cmd == 0x1081 then get_status(buffer, pinfo, subtree) 
@@ -82,7 +82,7 @@ function get_status(buffer, pinfo, tree)
     if     pinfo.src_port == default_settings.port and pinfo.dst_port ~= default_settings.port then 
         local datetime_buffer  = buffer(5,7)
         local datetime, weekday, wday_buffer, wday_match 
-                               = datetime_BCD(datetime_buffer) 
+                               = get_datetime_BCD(datetime_buffer) 
         local tot_record_buff  = buffer(12,3)
         local tot_record       = readLH(tot_record_buff)
         local tot_regist_buff  = buffer(15,2)
@@ -93,7 +93,7 @@ function get_status(buffer, pinfo, tree)
         tree:add(proto_fields.day, wday_buffer, weekday, nil, wday_match and "Matched" or "Not Matched")
         tree:add(proto_fields.tot_record, tot_record_buff, tot_record)
         tree:add(proto_fields.tot_regist, tot_regist_buff, tot_regist)
-        record_info(record_buffer, tree) 
+        record_info(record_buffer, pinfo, tree) 
     elseif pinfo.src_port ~= default_settings.port and pinfo.dst_port == default_settings.port then 
         local record_buffer = buffer(5,4)
         local record_index  = readLH(record_buffer)
@@ -105,7 +105,7 @@ function get_status(buffer, pinfo, tree)
     end 
 end 
 
-function Checksum(buffer)
+function checksum(buffer)
     local ll  = buffer:len()
     local sum = 0
     for ii=ll-1,0,-1
@@ -115,7 +115,7 @@ function Checksum(buffer)
     return sum
 end 
 
-function datetime_BCD(buffer) 
+function get_datetime_BCD(buffer) 
     local year         = readBCD(buffer(0,1):uint())
     local month        = readBCD(buffer(1,1):uint()) 
     local day          = readBCD(buffer(2,1):uint()) 
@@ -136,7 +136,12 @@ function datetime_BCD(buffer)
     return datetime, weekday, wday_buffer, wday_match
 end 
 
-function record_info(buffer, tree) 
+function get_datetime_short(buffer) 
+    local year = buffer(0,1):uint() 
+    return year
+end 
+
+function record_info(buffer, pinfo, tree) 
     local card_buffer = buffer(0,4) 
     local card        = readLH(card_buffer)
     local subtree     = tree:add(proto_fields.record_card, card_buffer, card)
