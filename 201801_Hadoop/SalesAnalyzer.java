@@ -1,8 +1,8 @@
 /**
- * job2. Break the sales down by product category across all of stores
- * job3. Find the monetary value for the highest individual sale for each separate store
- * job4. Find the total sales value across all the stores, and the total number of sales 
- *       (Assume there is only one reducer)
+ * job2. Break the sales down by product category
+ * job3. Find the monetary value for the highest individual sale for each store
+ * job4. Find the total sales value and the total number of sales 
+ *       (Using only one reducer)
  */
 
 import java.lang.String;

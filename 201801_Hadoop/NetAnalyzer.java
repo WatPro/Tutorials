@@ -1,6 +1,6 @@
 /**
- * job6. Number of hits for each different file on the Web site
- * job7. Number of hits to the site made by each different IP address
+ * job6. Number of requests for each file on the Web site
+ * job7. Number of requests to the site made by each IP address
  * job8. Most popular file on the website (sort job6)
  */
 
@@ -169,9 +169,10 @@ class CommonLogFormat {
     public boolean readLine(String line) {
         success = false; 
         rawLine = line; 
-        addressText = userId = userName = datetimeText =
+        addressText = userId = userName = datetimeText = 
         requestText = requestText_method = requestText_resourcePath = requestText_protocol =
         statusText = sizeText = null; 
+        datetime = null; 
         Matcher matcherLine = pattern_CLF.matcher(line);
         if (!matcherLine.matches()) {
             return success; 
