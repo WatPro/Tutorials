@@ -14,7 +14,6 @@ fi
 data="{\"to\":\"${mobiles}\",\"appId\":\"${appId}\",\"templateId\":\"${templateId}\"${datas}}"
 datetime=$(date +"%Y%m%d%H%M%S")
 SigParameter=`echo -n ${accountSid}${accountToken}${datetime} | md5sum | cut --delimiter=' ' --fields=1 | tr "[:lower:]" "[:upper:]"`
-domain='https://sandboxapp.cloopen.com:8883'
 domain='https://app.cloopen.com:8883'
 url="/2013-12-26/Accounts/${accountSid}/SMS/TemplateSMS?sig=${SigParameter}"
 https_url="${domain}${url}"
