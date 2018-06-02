@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////   This Demo is adopoted from the official guide:               ////////
 ////////       https://help.aliyun.com/document_detail/56189.html       ////////
-////////   Minor change was made.                                       ////////
+////////   Minor changes were made.                                       ////////
 ////////////////////////////////////////////////////////////////////////////////
 
 public class SignDemo {
@@ -64,6 +64,7 @@ public class SignDemo {
         stringToSign.append(specialUrlEncode(sortedQueryString));
         String signature = sign(secretKey, stringToSign.toString());
           // paras.put("Signature", signature);
+        // 6. Complete the query string 
         StringBuilder QueryStringTmp = new StringBuilder();
         QueryStringTmp
             .append("Signature")
