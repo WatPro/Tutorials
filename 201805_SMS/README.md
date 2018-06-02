@@ -1,5 +1,5 @@
 
-## Sending Messages via Alibaba Dayu SMS API 
+## Sending Messages via Alibaba DaYu SMS API 
 
 ```
 Sorted Parameters: 
@@ -10,7 +10,7 @@ Format=XML
 OutId=123
 PhoneNumbers=15300000001
 RegionId=cn-hangzhou
-SignName=?????????
+SignName=阿里云短信测试专用
 SignatureMethod=HMAC-SHA1
 SignatureNonce=45e25e9b-0a6f-4070-8c85-2956eda1b466
 SignatureVersion=1.0
