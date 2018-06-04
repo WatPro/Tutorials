@@ -2,9 +2,6 @@
 
 accessKeyId='testId'
 accessSecret='testSecret'
-phoneNumbers='15300000001'
-templateCode='SMS_71390007'
-templateParam='{\"customer\":\"test\"}'
 if [ ! -n "${phoneNumbers}" ]
 then
     >&2 echo 'Phone Number Needed! '
@@ -85,10 +82,16 @@ Version             2017-05-25
 RegionId            cn-hangzhou
 PhoneNumbers        ${phoneNumbers}
 SignName            ${signName}
-TemplateParam       ${templateParam}
 TemplateCode        ${templateCode}
 OutId               123
 """
+if [ -n "${templateParam}" ]
+then
+paras="""
+${paras}
+TemplateParam       ${templateParam}
+"""
+fi
 paras=`echo "${paras}" | awk '/.+/ && !/^Signature /'` 
 sortedQueryString=`echo "${paras}" | LC_COLLATE=C sort | urlencode_key_value | awk '{printf "&%s=%s", $1, $2}'`
 sortedQueryString="${sortedQueryString:1}"
