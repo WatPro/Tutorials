@@ -101,26 +101,6 @@ Signature           ${signature}
 paras=`echo "${paras}" | awk '/.+/'` 
 URL="http://dysmsapi.aliyuncs.com/?`echo Signature | specialUrlEncode`=`echo ${signature} | specialUrlEncode`&${sortedQueryString}"
 
-echo "Sorted Parameters: "
-echo
-echo "${paras}" | awk '{ if (!/^Signature /) print $1 "=" $2}'
-echo
-echo "Sorted Query String: "
-echo
-echo "${sortedQueryString}"
-echo
-echo "String To Sign: "
-echo
-echo "${stringToSign}"
-echo
-echo "HMAC Cryptographic Key:  "
-echo
-echo "${secretKey}"
-echo
-echo "Signature: "
-echo
-echo "${signature}"
-echo
-echo "URL (GET method): "
-echo
 echo "${URL}"
+curl "${URL}"
+ 
