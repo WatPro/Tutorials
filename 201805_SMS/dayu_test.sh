@@ -27,6 +27,7 @@ then
 else 
     UUID=`date +"%T"`
 fi
+timestamp=`TZ=GMT date +"%Y-%m-%dT%H:%M:%SZ"`
 
 function urlencode() {
     function percent() {
@@ -77,7 +78,7 @@ SignatureMethod     HMAC-SHA1
 SignatureNonce      ${UUID}
 AccessKeyId         ${accessKeyId}
 SignatureVersion    1.0
-Timestamp           2017-07-12T02:42:19Z
+Timestamp           ${timestamp}
 Format              XML
 Action              SendSms
 Version             2017-05-25
