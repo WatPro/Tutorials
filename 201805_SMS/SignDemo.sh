@@ -5,11 +5,10 @@ accessSecret='testSecret'
 phoneNumbers='15300000001'
 templateCode='SMS_71390007'
 templateParam='{\"customer\":\"test\"}'
-
 if [ ! -n "${phoneNumbers}" ]
 then
     >&2 echo 'Phone Number Needed! '
-    exit(1)
+    exit 1 
 fi
 if [ ! -n "${signName}" ]
 then
