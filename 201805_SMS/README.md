@@ -1,6 +1,8 @@
 
 ## Sending Messages via Alibaba DaYu SMS API 
 
+See demo [here](./TEST.md#alibaba-dayu-sms-api).
+
 
 ## Sending Messages via Cloopen Text Message Platform 
 
