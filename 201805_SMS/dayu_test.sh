@@ -110,9 +110,9 @@ Signature           ${signature}
 paras=`echo "${paras}" | awk '/.+/'` 
 URL="http://dysmsapi.aliyuncs.com/?`echo Signature | specialUrlEncode`=`echo ${signature} | specialUrlEncode`&${sortedQueryString}"
 
-echo "GMT:"         > "${LOG_FILE}"
-echo "${timestamp}" > "${LOG_FILE}"
-echo "URL:"         > "${LOG_FILE}"
-echo "${URL}"       > "${LOG_FILE}"
-curl "${URL}"
+echo "GMT:"         >> "${LOG_FILE}"
+echo "${timestamp}" >> "${LOG_FILE}"
+echo "URL:"         >> "${LOG_FILE}"
+echo "${URL}"       >> "${LOG_FILE}"
+curl "${URL}"       >> "${LOG_FILE}"  2>> "${LOG_FILE}"
  
