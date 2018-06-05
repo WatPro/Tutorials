@@ -3,6 +3,18 @@
 
 See demo [here](./TEST.md#alibaba-dayu-sms-api).
 
+```bash
+yes | cp "dayu_test.sh" "dayu.sh"
+sed --in-place "s/^accessKeyId=.*$/accessKeyId='testId'/" "dayu.sh"
+sed --in-place "s/^accessSecret=.*$/accessSecret='testSecret'/" "dayu.sh"
+sed --in-place "s/^LOG_FILE=.*$/LOG_FILE='log_dayu.log'/" "dayu.sh"
+## Set A Job 
+export phoneNumbers=`sed "s/\r$//" sample.txt | paste --serial --delimiters=","`
+export templateCode='SMS_71390007'
+export templateParam='{"customer":"test"}'
+export signName='阿里云短信测试专用'
+bash dayu.sh
+```
 
 ## Sending Messages via Cloopen Text Message Platform 
 
