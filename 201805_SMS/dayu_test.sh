@@ -115,4 +115,11 @@ echo "${timestamp}" >> "${LOG_FILE}"
 echo "URL:"         >> "${LOG_FILE}"
 echo "${URL}"       >> "${LOG_FILE}"
 curl "${URL}"       >> "${LOG_FILE}"  2>> "${LOG_FILE}"
- 
+if [ $? -eq 0 ]
+then
+    echo "Request Successfully Processed "
+else
+    echo "Request NOT Successfully Processed "
+fi
+echo                >> "${LOG_FILE}"
+echo                >> "${LOG_FILE}"
