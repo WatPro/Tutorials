@@ -45,10 +45,10 @@ function urlencode() {
         c="${instream:i:1}"
         case $c in
             [A-Za-z0-9-_.~])
-                echo -n "$c"
+                echo -n "$c" | iconv --to-code=UTF-8
             ;;
             *)
-                echo -n "$c" | xxd -plain -u | percent
+                echo -n "$c" | iconv --to-code=UTF-8 | xxd -plain -u | percent
             ;;
         esac
         ((i=i+1))
@@ -102,7 +102,7 @@ paras=`echo "${paras}" | awk '/.+/ && !/^Signature /'`
 sortedQueryString=`echo "${paras}" | LC_COLLATE=C sort | urlencode_key_value | awk '{printf "&%s=%s", $1, $2}'`
 sortedQueryString="${sortedQueryString:1}"
 stringToSign="GET&`echo / | specialUrlEncode`&`echo ${sortedQueryString} | specialUrlEncode`"
-signature=`echo -n "${stringToSign}" | openssl dgst -sha1 -hmac "${secretKey}" -binary | base64`
+signature=`echo -n "${stringToSign}" | iconv --to-code=UTF-8 | openssl dgst -sha1 -hmac "${secretKey}" -binary | base64`
 paras="""
 $paras
 Signature           ${signature}
