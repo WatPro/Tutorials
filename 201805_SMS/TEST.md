@@ -3,18 +3,20 @@
 
 ### Alibaba DaYu SMS API
 
-Demo in Java, modified from official guide. 
+[Demo](./SignDemo.java) in Java, modified from official [guide](https://help.aliyun.com/document_detail/56189.html). 
 
 ```bash
 javac SignDemo.java
 java SignDemo
 ```
 
-Bash implementation od demo.
+Bash implementation of [demo](./SignDemo.sh).
 
 ```bash
 bash SignDemo.sh
 ```
+
+OUTPUT on the screen if run successfully.
 
 ```
 Sorted Parameters: 
