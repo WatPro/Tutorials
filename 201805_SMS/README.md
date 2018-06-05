@@ -3,7 +3,7 @@
 
 See demo [here](./TEST.md#alibaba-dayu-sms-api).
 
-The following script help to send messages to mobile users listed in [sample.txt](./sample.txt)
+The following script helps to send messages to mobile users listed in [sample.txt](./sample.txt)
 
 ```bash
 yes | cp "dayu_test.sh" "dayu.sh"
