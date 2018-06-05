@@ -8,7 +8,7 @@ accessKeyId='testId'
 accessSecret='testSecret'
 phoneNumbers='15300000001'
 templateCode='SMS_71390007'
-templateParam='{\"customer\":\"test\"}'
+templateParam='{"customer":"test"}'
 if [ ! -n "${phoneNumbers}" ]
 then
     >&2 echo 'Phone Number Needed! '
