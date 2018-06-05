@@ -76,20 +76,25 @@ SignatureNonce      ${UUID}
 AccessKeyId         ${accessKeyId}
 SignatureVersion    1.0
 Timestamp           ${timestamp}
-Format              XML
 Action              SendSms
 Version             2017-05-25
 RegionId            cn-hangzhou
 PhoneNumbers        ${phoneNumbers}
 SignName            ${signName}
 TemplateCode        ${templateCode}
-OutId               123
 """
 if [ -n "${templateParam}" ]
 then
 paras="""
 ${paras}
 TemplateParam       ${templateParam}
+"""
+fi
+if [ -n "${outId}" ]
+then
+paras="""
+${paras}
+OutId               ${outId}
 """
 fi
 paras=`echo "${paras}" | awk '/.+/ && !/^Signature /'` 
