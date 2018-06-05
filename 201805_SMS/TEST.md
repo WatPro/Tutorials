@@ -5,6 +5,17 @@
 
 Demo in Java, modified from official guide. 
 
+```bash
+javac SignDemo.java
+java SignDemo
+```
+
+Bash implementation od demo.
+
+```bash
+bash SignDemo.sh
+```
+
 ```
 Sorted Parameters: 
 
