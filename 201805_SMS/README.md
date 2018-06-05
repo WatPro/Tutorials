@@ -3,8 +3,11 @@
 
 See demo [here](./TEST.md#alibaba-dayu-sms-api).
 
+The following script help to send messages to mobile users listed in [sample.txt](./sample.txt)
+
 ```bash
 yes | cp "dayu_test.sh" "dayu.sh"
+## Installation and Setup
 sed --in-place "s/^accessKeyId=.*$/accessKeyId='testId'/" "dayu.sh"
 sed --in-place "s/^accessSecret=.*$/accessSecret='testSecret'/" "dayu.sh"
 sed --in-place "s/^LOG_FILE=.*$/LOG_FILE='log_dayu.log'/" "dayu.sh"
