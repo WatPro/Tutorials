@@ -2,6 +2,7 @@
 
 accessKeyId='testId'
 accessSecret='testSecret'
+LOG_FILE='log_dayu.log'
 if [ ! -n "${phoneNumbers}" ]
 then
     >&2 echo 'Phone Number Needed! '
@@ -109,6 +110,9 @@ Signature           ${signature}
 paras=`echo "${paras}" | awk '/.+/'` 
 URL="http://dysmsapi.aliyuncs.com/?`echo Signature | specialUrlEncode`=`echo ${signature} | specialUrlEncode`&${sortedQueryString}"
 
-echo "${URL}"
+echo "GMT:"         > "${LOG_FILE}"
+echo "${timestamp}" > "${LOG_FILE}"
+echo "URL:"         > "${LOG_FILE}"
+echo "${URL}"       > "${LOG_FILE}"
 curl "${URL}"
  
