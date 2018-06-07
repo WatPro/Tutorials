@@ -9,19 +9,8 @@ accessSecret='testSecret'
 phoneNumbers='15300000001'
 templateCode='SMS_71390007'
 templateParam='{"customer":"test"}'
-if [ ! -n "${phoneNumbers}" ]
-then
-    >&2 echo 'Phone Number Needed! '
-    exit 1 
-fi
-if [ ! -n "${signName}" ]
-then
-    signName='阿里云短信测试专用'
-fi
-if [ ! -n "${templateCode}" ]
-then
-    templateCode='SMS_71390007'
-fi
+signName='阿里云短信测试专用'
+templateCode='SMS_71390007'
 
 function urlencode() {
     function percent() {
