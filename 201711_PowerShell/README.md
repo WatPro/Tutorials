@@ -20,6 +20,6 @@ New-Item -ItemType "file" -Path "./$dir/NonTargetFile1.txt", "./$dir/NonTargetFi
 ```
 
 ```PowerShell
-Get-ChildItem -Path "TargetDir*" -Directory | Select-Object -Property FullName | ForEach-Object {Get-ChildItem -Path ($_.FullName+"/TargetFile*.txt") -File} | Where-Object {($_.CreationTime).Date -eq (Get-Date).Date} | Select-Object -Property FullName, DirectoryName, Name | ForEach-Object { Get-Content -Path $_.FullName | Out-File -FilePath ($_.DirectoryName+"/result"+$_.Name) }
+Get-ChildItem -Path "TargetDir*" -Directory | Select-Object -Property FullName | ForEach-Object {Get-ChildItem -Path ($_.FullName+"/TargetFile*.txt") -File} | Where-Object {($_.CreationTime).Date -eq (Get-Date).Date} | Select-Object -Property FullName, DirectoryName, Name | ForEach-Object { Get-Content -Path $_.FullName | Out-File -FilePath ($_.DirectoryName+"/result_"+$_.Name) }
 
 ```
