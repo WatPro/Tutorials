@@ -8,7 +8,6 @@ $plan=(Get-ChildItem -Path "TargetDir*" -Directory | Select-Object -Property Ful
  
 $plan
  
-$plan | ForEach-Object { Get-Content -Path $_.Target -Raw -Encoding ASCII | Out-File -FilePath $_.Destination -Encoding UTF8 }
+$plan | ForEach-Object { Get-Content -Path $_.Target -Raw -Encoding ASCII | Out-File -FilePath $_.Destination -Encoding UTF8 -NoNewline }
  
-
 ```
