@@ -1,0 +1,9 @@
+C:\OngoingProjects\ProtectPDF\ProtectPDF\bin\Debug\ProtectPDF.dll
+C:\OngoingProjects\ProtectPDF\ProtectPDF\bin\Debug\ProtectPDF.pdb
+C:\OngoingProjects\ProtectPDF\ProtectPDF\obj\Debug\ProtectPDF.csprojResolveAssemblyReference.cache
+C:\OngoingProjects\ProtectPDF\ProtectPDF\obj\Debug\ProtectPDF.dll
+C:\OngoingProjects\ProtectPDF\ProtectPDF\obj\Debug\ProtectPDF.pdb
+C:\OngoingProjects\TestProtectPDF\ProtectPDF\ProtectPDF\bin\Debug\ProtectPDF.dll
+C:\OngoingProjects\TestProtectPDF\ProtectPDF\ProtectPDF\bin\Debug\ProtectPDF.pdb
+C:\OngoingProjects\TestProtectPDF\ProtectPDF\ProtectPDF\obj\Debug\ProtectPDF.dll
+C:\OngoingProjects\TestProtectPDF\ProtectPDF\ProtectPDF\obj\Debug\ProtectPDF.pdb
