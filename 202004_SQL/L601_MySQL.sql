@@ -23,13 +23,14 @@ WHERE
             BETWEEN `front`.`id` AND (`front`.`id`+2)
         )
         AND 
-        3 = (
-        SELECT COUNT(1) 
+        EXISTS (
+        SELECT 1 
         FROM `stadium` `period`
-        WHERE `period`.`id` 
-            BETWEEN `front`.`id` AND (`front`.`id`+2)
+        WHERE `period`.`id` = (`front`.`id`+2)
         )
         AND
         `stadium`.`id` BETWEEN `front`.`id` AND (`front`.`id`+2)
     ) 
+# ORDER BY
+#     `id`
 ;
