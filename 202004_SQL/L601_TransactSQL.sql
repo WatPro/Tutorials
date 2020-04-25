@@ -5,55 +5,38 @@
 
 /* Write your T-SQL query statement below */
 
+DECLARE @consec [int] = 3; 
 WITH 
-    [ranked] AS (
-    SELECT 
-        ROW_NUMBER() OVER(ORDER BY [visit_date] ASC) AS [row], 
-              -- visit_date is unique
-        [id], -- id and visit_date is in the same order
-        [visit_date],
-        [people]
-    FROM 
-        [stadium]
-    ), 
-    [single_day] AS (
-    SELECT
-        [row],
-        [id], 
-        [visit_date],
-        [people]
-    FROM 
-        [ranked]
-    WHERE
-        [people] >= 100
-    ),
-    [interior_row] AS ( -- rows inside (i.e. not at the boundary)
-    SELECT 
-        [row]
-    FROM 
-        [single_day] 
-    WHERE -- minimum neighbourhood
-        ([row] - 1) 
-            IN (SELECT [row] FROM [single_day])
-        AND
-        ([row] + 1) 
-            IN (SELECT [row] FROM [single_day])
+    [front] AS (
+    SELECT [id] 
+    FROM [stadium] [front]
+    WHERE 
+        100 <= ALL (
+        SELECT [people] 
+        FROM [stadium] [period]
+        WHERE [period].[id] 
+            BETWEEN [front].[id] AND ([front].[id]+(@consec-1))
+        )
+        AND 
+        EXISTS (
+        SELECT 1 
+        FROM [stadium] [period]
+        WHERE [period].[id] = ([front].[id]+(@consec-1))
+        )
     )
 SELECT 
     [id], 
     [visit_date],
     [people]
-FROM
-    [single_day]
+FROM 
+    [stadium]
 WHERE
     EXISTS (
     SELECT 1 
-    FROM [interior_row]
-    WHERE 
-        [single_day].[row] 
-        BETWEEN 
-            ( [interior_row].[row] - 1 ) 
-        AND 
-            ( [interior_row].[row] + 1 )
-    )
+    FROM [front]
+    WHERE [stadium].[id] 
+        BETWEEN [front].[id] AND ([front].[id]+(@consec-1))
+    ) 
+-- ORDER BY
+--     [id]
 ;
