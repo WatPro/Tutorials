@@ -7,4 +7,4 @@ Assumptions
 
 Speculation
 
-* `visit_date` may be not continuous. 
+* `visit_date` may not be continuous. 
