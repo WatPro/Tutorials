@@ -42,6 +42,11 @@ SELECT
   ms_average
 FROM
   ping_summary
+ORDER BY
+  lost_rate  ASC,
+  ms_average ASC,
+  ms_worst   ASC,
+  ms_best    ASC
 ;
 END_OF_FILE
 
