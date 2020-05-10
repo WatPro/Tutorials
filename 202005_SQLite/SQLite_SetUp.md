@@ -1,7 +1,7 @@
 
 
 ```
-$ sudo apt-get -y install sqlite3
+$ sudo apt-get --assume-yes install sqlite3
 
 $ sqlite3 --version
 3.16.2 2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209
@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS nping_records (
   icmp_seq  INTEGER NOT NULL,
   raw_text  TEXT    NULL
 );
+CREATE INDEX IF NOT EXISTS nping_records_index_fr 
+  ON nping_records (batch, action, ip_from, time);
+CREATE INDEX IF NOT EXISTS nping_records_index_to 
+  ON nping_records (batch, action, ip_to, time);
+
 DROP VIEW IF EXISTS ping_records;
 CREATE VIEW ping_records AS
 WITH
