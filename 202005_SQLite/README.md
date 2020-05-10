@@ -21,6 +21,8 @@ cat nping_raw.txt |
 
 ### Process via SQLite
 
+`SQLite 3` should be well [setup](./SQLite_SetUp.md 'Set Up Database').
+
 ```bash
 cat << END_OF_FILE | sqlite3 iprange_test.db
 .mode tabs
