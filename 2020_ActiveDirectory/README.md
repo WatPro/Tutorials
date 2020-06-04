@@ -1,5 +1,5 @@
 
-- Table belows lists mapping for: Common Name (CN), [LDAP](https://tools.ietf.org/html/rfc4511 "https://tools.ietf.org/html/rfc4511") Display Name and Property Name (in PowerShell's Active Directory module).
+- Table belows lists mapping for: Common Name ([CN](https://docs.microsoft.com/en-us/windows/win32/adschema/a-cn "Active Directory Schema")), [LDAP](https://tools.ietf.org/html/rfc4511 "Lightweight Directory Access Protocol") Display Name and Property Name (in PowerShell's [Active Directory](https://docs.microsoft.com/en-us/powershell/module/activedirectory/set-aduser "Set-ADUser cmdlet modifies the properties of an Active Directory user") module).
 
 
 |    Common Name    | LDAP Display Name |   Property Name   | Size / Range-Upper |
