@@ -1,4 +1,5 @@
 
+- Table belows lists mapping for: Common Name (CN), [LDAP](https://tools.ietf.org/html/rfc4511 "https://tools.ietf.org/html/rfc4511") Display Name and Property Name (in PowerShell's Active Directory module).
 
 
 |    Common Name    | LDAP Display Name |   Property Name   | Size / Range-Upper |
