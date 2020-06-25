@@ -14,13 +14,16 @@ curl ${page_download} |
 
 ```
 
-## Download Data from TARGET
+## Download Data from TARGET 
+
+Download Only GENE Data 
 
 ```
 folder_raw='00raw/'
 mkdir --parent "${folder_raw}"
 folder_list='10list/'
 cat "${folder_list}BCCA.txt" | 
+  sed --silent '/\.gene\.quantification\.txt$/p' |
   while read -r line
   do 
     curl --output "${folder_raw}${line##*/}" "${line}"
