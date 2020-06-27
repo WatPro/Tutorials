@@ -3,22 +3,22 @@
         "op":"and",
         "content":[
             {
-                "op":"=",
+                "op":"in",
                 "content":{
                     "field":"cases.project.project_id",
-                    "value":"TCGA-LAML"
+                    "value":["TCGA-LAML"]
                 }
             },
             {
-                "op":"=",
+                "op":"in",
                 "content":{
                     "field":"files.data_category",
-                    "value":"clinical"
+                    "value":["clinical"]
                 }
             }
         ]
     },
-    "format":"tsv",
-    "fields":"file_id,file_name",
+    "format":"json",
+    "fields":"file_id,file_name,cases.project.project_id,cases.submitter_id,data_category",
     "size":"1000"
 }
