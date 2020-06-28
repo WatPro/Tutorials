@@ -51,3 +51,27 @@ cat "${folder_list}LAML.tsv" |
 
 ```
 
+## Get Common Data Element definition
+
+```bash
+folder_raw='02raw_xml/'
+folder_list='10list/'
+mkdir --parent "${folder_list}"
+
+python3 get_CDEList.py > "${folder_list}cde_id_raw.txt"
+cat "${folder_list}cde_id_raw.txt" | sort --ignore-leading-blanks --ignore-nonprinting --field-separator=$'\t' --key=3,3 --key=1,1 | uniq > "${folder_list}cde_id_sorted.txt"
+api_cde='https://cdebrowser.nci.nih.gov/cdebrowserServer/rest/CDELink?publicId=__cde__&version=1.0'
+cat "${folder_list}cde_id_sorted.txt" | 
+  cut --delimiter=$'\t' --fields=3 | 
+  sed '/^$/d' | 
+  sort --numeric-sort | uniq | 
+  while read -r line 
+  do
+    api_cde_query="${api_cde/__cde__/$line}"
+    jsonpath="${folder_raw}cde_${line}.json"
+    curl --output "${jsonpath}" "${api_cde_query}"
+  done 
+
+```
+
+
