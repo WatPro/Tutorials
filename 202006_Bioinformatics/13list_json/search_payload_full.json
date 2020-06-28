@@ -20,7 +20,7 @@
     },
     "format":"json",
     "pretty":"true",
-    "fields":"access,acl,created_datetime,data_category,data_format,data_type,error_type,experimental_strategy,file_id,file_name,file_size,file_state,md5sum,origin,platform,revision,state,state_comment,submitter_id,tags,type,updated_datetime,analysis.analysis_id,analysis.input_files.file_id,analysis.metadata.read_groups.read_group_id,analysis.metadata.read_groups.read_group_qcs.read_group_qc_id,annotations.annotation_id,archive.archive_id,associated_entities.entity_id,cases.case_id,cases.submitter_id,cases.project.project_id,center.center_id,downstream_analyses.analysis_id,downstream_analyses.output_files.file_id,index_files.file_id,metadata_files.file_id",
+    "fields":"access,acl,created_datetime,data_category,data_format,data_type,error_type,experimental_strategy,file_id,file_name,file_size,md5sum,origin,platform,revision,state,state_comment,submitter_id,tags,type,updated_datetime,analysis.analysis_id,analysis.input_files.file_id,analysis.metadata.read_groups.read_group_id,analysis.metadata.read_groups.read_group_qcs.read_group_qc_id,annotations.annotation_id,archive.archive_id,associated_entities.entity_id,cases.case_id,cases.submitter_id,cases.project.project_id,center.center_id,downstream_analyses.analysis_id,downstream_analyses.output_files.file_id,index_files.file_id,metadata_files.file_id",
     "size":"1000",
     "from":"0",
     "sort":"file_name:asc"
