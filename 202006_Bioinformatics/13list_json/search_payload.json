@@ -18,7 +18,9 @@
             }
         ]
     },
-    "format":"tsv",
-    "fields":"file_id,file_name",
-    "size":"1000"
+    "format":"json",
+    "pretty":"true",
+    "size":"1000",
+    "from":"0",
+    "sort":"file_name:asc"
 }
