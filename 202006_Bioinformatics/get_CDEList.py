@@ -10,7 +10,7 @@ class ContentHandler( xml.sax.ContentHandler ):
     
   def startElement(self, tag, attributes): 
     self.currentTag = tag
-    if "cde" in attributes: 
+    if 'cde' in attributes: 
       self.CommonDataElement = attributes['cde']
     if tag == 'laml:patient':
       self.isBody = True 
@@ -19,7 +19,7 @@ class ContentHandler( xml.sax.ContentHandler ):
     thisContent = content.strip() 
     thisTag     = re.sub('^.+:','',self.currentTag)
     if self.isBody and (thisTag != '') and not (thisContent == ''): 
-      print(filename,'\t',thisTag,"\t",self.CommonDataElement.strip())
+      print(filename,thisTag,self.CommonDataElement.strip(),sep='\t')
   
   def endElement(self, tag): 
     self.currentTag        = ''
