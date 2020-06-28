@@ -19,7 +19,7 @@ class ContentHandler( xml.sax.ContentHandler ):
     thisContent = content.strip() 
     thisTag     = re.sub('^.+:','',self.currentTag)
     if self.isBody and (thisTag != '') and not (thisContent == ''): 
-      print(filename,'\t',thisTag,"\t",self.CommonDataElement)
+      print(filename,'\t',thisTag,"\t",self.CommonDataElement.strip())
   
   def endElement(self, tag): 
     self.currentTag        = ''
