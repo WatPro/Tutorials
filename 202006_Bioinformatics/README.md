@@ -29,7 +29,7 @@ cat "${folder_list}BCCA.txt" |
 
 ```
 
-## download XML files
+## Download XML files
 
 ```bash
 folder_raw='02raw_xml/'
@@ -46,7 +46,7 @@ cat "${folder_list}LAML.tsv" |
   do
     uuid="${line%% *}"
     file="${folder_raw}${line##* }" 
-    curl --output "${file}" "${api_data}${file}" 
+    curl --output "${file}" "${api_data}${uuid}" 
   done
 
 ```
