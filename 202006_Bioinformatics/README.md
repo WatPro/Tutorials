@@ -60,17 +60,31 @@ mkdir --parent "${folder_list}"
 
 python3 get_CDEList.py > "${folder_list}cde_id_raw.txt"
 cat "${folder_list}cde_id_raw.txt" | sort --ignore-leading-blanks --ignore-nonprinting --field-separator=$'\t' --key=3,3 --key=1,1 | uniq > "${folder_list}cde_id_sorted.txt"
-api_cde='https://cdebrowser.nci.nih.gov/cdebrowserServer/rest/CDELink?publicId=__cde__&version=1.0'
+api_search='https://cdebrowser.nci.nih.gov/cdebrowserServer/rest/search?publicId=__cde__'
 cat "${folder_list}cde_id_sorted.txt" | 
   cut --delimiter=$'\t' --fields=3 | 
   sed '/^$/d' | 
   sort --numeric-sort | uniq | 
   while read -r line 
   do
-    api_cde_query="${api_cde/__cde__/$line}"
-    jsonpath="${folder_raw}cde_${line}.json"
-    curl --output "${jsonpath}" "${api_cde_query}"
+    api_search_query="${api_search/__cde__/$line}"
+    jsonpath="${folder_raw}search_${line}.json"
+    curl --output "${jsonpath}" "${api_search_query}"
   done 
+
+api_deIdseq='https://cdebrowser.nci.nih.gov/cdebrowserServer/rest/CDEData?deIdseq=__deIdseq__'
+cat ${folder_raw}search_*.json |
+  sed 's/,/,\n/g' |
+
+  sed --silent 's/^.*"deIdseq":"\([^"]*\)".*$/\1/p' |
+  while read -r line
+  do
+    api_search_query="${api_deIdseq/__deIdseq__/$line}"
+    jsonpath="${folder_raw}deIdseq_${line}.json"
+    curl --output "${jsonpath}" "${api_search_query}"
+  done 
+
+python3 get_CDEdefinition.py > "${folder_list}CDE_Definition.txt"
 
 ```
 
