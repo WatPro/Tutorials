@@ -11143,3 +11143,4 @@ genome.wustl.edu_clinical.TCGA-AB-3008.xml	leukemia_specimen_cell_source_type	64
 genome.wustl.edu_clinical.TCGA-AB-3009.xml	leukemia_specimen_cell_source_type	64583
 genome.wustl.edu_clinical.TCGA-AB-3011.xml	leukemia_specimen_cell_source_type	64583
 genome.wustl.edu_clinical.TCGA-AB-3012.xml	leukemia_specimen_cell_source_type	64583
+filename	tag	cde
