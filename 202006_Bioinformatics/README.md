@@ -29,25 +29,24 @@ cat "${folder_list}BCCA.txt" |
 
 ```
 
-## Download XML files
+## Download Clinical Data
 
 ```bash
-folder_raw='02raw_xml/'
-folder_list='10list/'
-mkdir --parent "${folder_list}"
+folder_raw='03raw_json/'
+mkdir --parent "${folder_raw}"
+folder_raw_xml='02raw_xml/'
+folder_list='13list_json/'
 
-curl --request POST --header "Content-Type: application/json" --data "@${folder_raw}Payload_full.json" 'https://api.gdc.cancer.gov/files' > "${folder_list}LAML.json"
-curl --request POST --header "Content-Type: application/json" --data "@${folder_raw}Payload.json" 'https://api.gdc.cancer.gov/files' > "${folder_list}LAML.tsv"
+api_file='https://api.gdc.cancer.gov/files'
+curl --request POST --header "Content-Type: application/json" --data "@${folder_list}search_payload_full.json" "${api_file}" > "${folder_raw}LAML_FULL.json"
+curl --request POST --header "Content-Type: application/json" --data "@${folder_list}search_payload.json" "${api_file}" > "${folder_raw}LAML.json"
 
+payloadbulk="${folder_list}download_payload_bulk.json"
+python3 script_payload_gen_bulk.py > "${payloadbulk}"
 api_data='https://api.gdc.cancer.gov/data/'
-cat "${folder_list}LAML.tsv" | 
-  sed --silent 's/^\([0-9a-z]\{8\}\(-[0-9a-z]\{4\}\)\{3\}-[0-9a-z]\{12\}\)\s\+\(\S\+\.xml\)\s.*$/\1 \3/p' | 
-  while read -r line
-  do
-    uuid="${line%% *}"
-    file="${folder_raw}${line##* }" 
-    curl --output "${file}" "${api_data}${uuid}" 
-  done
+download_filename='gdc_download.tar.gz'
+curl --output "${download_filename}" --request POST --header 'Content-Type: application/json' --data @${payloadbulk} "${api_data}"
+tar --extract --file="${download_filename}" --directory="${folder_raw_xml}"
 
 ```
 
