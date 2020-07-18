@@ -19,11 +19,22 @@ This mini-project constructs a list based on official Unicode Character Database
  
 ```
 Operation System: CentOS 8
-SQLite 3 pre-installed
+SQLite3 pre-installed
 ```
 
 ```
 # sqlite3 --version
 3.26.0 2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238alt1
+
+```
+
+## Script Execution
+
+```bash
+bash script_list.sh
+
+bash script_block_part1.sh
+ 
+bash script_block_part2.sh
 
 ```
