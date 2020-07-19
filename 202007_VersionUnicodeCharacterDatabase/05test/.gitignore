@@ -1,5 +1,5 @@
 *.raw
 *.sample
 *.txt
-*.csv
+*.tsv
 
