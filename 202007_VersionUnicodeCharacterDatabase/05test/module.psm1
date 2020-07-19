@@ -21,8 +21,9 @@ function Get-UTF8ByteValue {
   switch( Get-UTF8ByteType -Byte $Byte ) { 
     0 { $Byte -band 0b000111111 }
     1 { $Byte                   }
-    2 { $Byte -band 0b000001111 }
-    3 { $Byte -band 0b000000111 }
+    2 { $Byte -band 0b000011111 }
+    3 { $Byte -band 0b000001111 }
+    4 { $Byte -band 0b000000111 }
   }
 }
 function Get-UTF8Code {
@@ -31,29 +32,29 @@ function Get-UTF8Code {
   ); 
   [System.Int16]$Byte1 = $Stream.ReadByte(); 
   if( $Byte1 -eq -1 ) {return -1;}
-  [System.Int32]$type = (Get-UTF8ByteType -Byte $Byte1); 
-  [System.Int32]$vv   = (Get-UTF8ByteValue -Byte $Byte1);
+  [System.Int32]$type  = (Get-UTF8ByteType -Byte $Byte1); 
+  [System.Int32]$vv    = (Get-UTF8ByteValue -Byte $Byte1);
   if ( $type -eq 1 ) {
     return $vv; 
   }
   if ( $type -ge 2 ) {
     [System.Int16]$Byte_p = $Stream.ReadByte();
     if( $Byte_p -eq -1 ) {return -1;}
-    [System.Int32]$vv_p  = (Get-UTF8ByteValue -Byte $Byte_p);
+    [System.Int32]$vv_p   = (Get-UTF8ByteValue -Byte $Byte_p);
     $vv *= 0b001000000; 
     $vv += $vv_p;
   } 
   if ( $type -ge 3 ) {
     [System.Int16]$Byte_p = $Stream.ReadByte();
     if( $Byte_p -eq -1 ) {return -1;}
-    [System.Int32]$vv_p  = (Get-UTF8ByteValue -Byte $Byte_p);
+    [System.Int32]$vv_p   = (Get-UTF8ByteValue -Byte $Byte_p);
     $vv *= 0b001000000; 
     $vv += $vv_p;
   }
   if ( $type -ge 4 ) {
     [System.Int16]$Byte_p = $Stream.ReadByte();
     if( $Byte_p -eq -1 ) {return -1;}
-    [System.Int32]$vv_p  = (Get-UTF8ByteValue -Byte $Byte_p);
+    [System.Int32]$vv_p   = (Get-UTF8ByteValue -Byte $Byte_p);
     $vv *= 0b001000000; 
     $vv += $vv_p;
   }
