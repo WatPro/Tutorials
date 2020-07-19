@@ -9,7 +9,6 @@ cat sample.txt |
     url="${line##*$'\t'}"
     scode="${line%%$'\t'*}"
     uuid=`uuidgen`
-    echo "${uuid}"
     file_raw="${uuid}.raw"
     curl --output "${file_raw}" "${url}" --header 'user-agent: Mozilla/5.0'
     file_sample="${uuid}.sample"
