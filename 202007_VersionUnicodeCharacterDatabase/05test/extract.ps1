@@ -29,11 +29,30 @@ Get-ChildItem |
   Where-Object {$_.unicode -ge 0x80} |
   Export-Csv -LiteralPath './statistics.tsv' -Delimiter "`t";
 
-Import-Csv -Delimiter "`t" -LiteralPath './statistics.tsv' |
-  Select-Object -Property @{
-      label      = 'unicode';
-      expression = {[System.Convert]::ToInt32($_.unicode);}
-    } |
+Get-ChildItem |
+  Where-Object {
+    $_.Extension -eq '.sample'
+  } | 
+  Select-String -Pattern '&#([1-9][0-9]{0,6});' -AllMatches |
+  Foreach-Object -Process {
+    [System.String]$filename = $_.Filename;
+    $_.Matches.ForEach({$_.Value -replace '&#([1-9][0-9]{0,6});', '$1'}) | 
+      Select-Object -Property @{label='unicode';expression={[System.Convert]::ToInt32($_);}}, 
+                              @{label='file';expression={${filename};}};
+  } | 
+  Export-Csv -LiteralPath './statistics2.tsv' -Delimiter "`t";
+
+Get-ChildItem |
+  Where-Object {
+    $_.Extension -eq '.tsv'
+  } | 
+  ForEach-Object -Process {
+    Import-Csv -Delimiter "`t" -LiteralPath $_.FullName |
+    Select-Object -Property @{
+        label      = 'unicode';
+        expression = {[System.Convert]::ToInt32($_.unicode);}
+      }; 
+  } |
   Sort-Object -Property unicode -Unique |
   Select-Object -Property unicode, 
     @{
