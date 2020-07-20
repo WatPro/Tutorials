@@ -1,9 +1,9 @@
 
-Import-Module -Name './module.psm1' -Function 'Get-FileUTF8Bytes', 'Get-UTF8Code';
+Import-Module -Name './module.psm1' -Function 'Get-FileUTF8Bytes', 'Get-UTF8Code', 'Get-UTF8Bytes';
 
 Get-ChildItem |
   Where-Object {
-    $_.Extension -eq '.csv'
+    $_.Extension -eq '.sample'
   } | 
   ForEach-Object -Process {
     [System.String]$BaseName  = $_.BaseName ; 
@@ -34,4 +34,10 @@ Import-Csv -Delimiter "`t" -LiteralPath './statistics.tsv' |
       label      = 'unicode';
       expression = {[System.Convert]::ToInt32($_.unicode);}
     } |
-  Sort-Object -Property unicode -Unique;
+  Sort-Object -Property unicode -Unique |
+  Select-Object -Property unicode, 
+    @{
+      label      ='utf8';
+      expression = {(Get-UTF8Bytes -Unicode $_.unicode).ForEach({$_.toString('X2');});}
+    } |
+  Export-Csv -LiteralPath './table.txt' -Delimiter "`t";
