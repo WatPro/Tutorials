@@ -37,16 +37,12 @@ function Get-FileUTF8Bytes {
   if ( ($type -ge 5) -or ($type -le 0) ) {
     return $Empty;
   }
-  [System.Int16]$vv     = (Get-UTF8ByteValue -Byte $Byte);
-  [System.Byte[]]$bytes = @($vv); 
-  if ( $type -eq 1 ) {
-    return (,$bytes);
-  }
+  [System.Byte[]]$bytes = @($Byte); 
   for ([System.Int16]$ii=2; $ii -le $type; $ii += 1) {
     [System.Int16]$Byte = $Stream.ReadByte();
-    if( $Byte_p -eq -1 ) {return $Empty;}
-    [System.Int32]$vv     = (Get-UTF8ByteValue -Byte $Byte);
-    $bytes += $vv; 
+    [System.Int16]$tt   = (Get-UTF8ByteType -Byte $Byte);
+    if(($Byte -eq -1) -or ($tt -ne 0)) {return $Empty;}
+    $bytes += $Byte; 
   }
   return (,$bytes);
 }
