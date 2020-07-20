@@ -1,5 +1,5 @@
 
-Import-Module -Name './module.psm1' -Function 'Get-UTF8Code';
+Import-Module -Name './module.psm1' -Function 'Get-FileUTF8Bytes', 'Get-UTF8Code';
 
 Get-ChildItem |
   Where-Object {
@@ -13,13 +13,16 @@ Get-ChildItem |
     ); 
     [System.IO.Stream]$Stream = $Reader.BaseStream; 
     while($true) {
-      [System.Int32]$Code = (Get-UTF8Code -Stream $Stream); 
-      if( ${Code} -le 0 ) {
+      [System.Byte[]]$Bytes = (Get-FileUTF8Bytes -Stream $Stream); 
+      if( $Bytes.Length -le 0 ) {
         break;
       }
-      1 | 
-      Select-Object -Property @{label='unicode';expression={${Code}}},
-                              @{label='file';expression={$BaseName}};
+      [System.String]$utf8s = $Bytes.ForEach({$_.toString('X2');}) -join ' '; 
+      [System.Int32]$Code   = (Get-UTF8Code -Bytes $Bytes);
+       1 | 
+       Select-Object -Property @{label='unicode';expression={${Code}}},
+                               @{label='file';expression={$BaseName}},
+                               @{label='utf8';expression={$utf8s}};
     }
     $Reader.Close();
   } | 
