@@ -32,16 +32,16 @@ function Get-FileUTF8Bytes {
   ); 
   [System.Byte[]]$Empty = @(); 
   [System.Int16]$Byte   = $Stream.ReadByte(); 
-  if( $Byte -eq -1 ) {return $Empty;}
+  if( $Byte -eq -1 ) {return (,$Empty);}
   [System.Int16]$type   = (Get-UTF8ByteType -Byte $Byte);
   if ( ($type -ge 5) -or ($type -le 0) ) {
-    return $Empty;
+    return (,$Empty);
   }
   [System.Byte[]]$bytes = @($Byte); 
   for ([System.Int16]$ii=2; $ii -le $type; $ii += 1) {
     [System.Int16]$Byte = $Stream.ReadByte();
     [System.Int16]$tt   = (Get-UTF8ByteType -Byte $Byte);
-    if(($Byte -eq -1) -or ($tt -ne 0)) {return $Empty;}
+    if(($Byte -eq -1) -or ($tt -ne 0)) {return (,$Empty);}
     $bytes += $Byte; 
   }
   return (,$bytes);
@@ -72,4 +72,51 @@ function Get-UTF8Code {
   }
   return $code; 
 }
-Export-ModuleMember -Function Get-FileUTF8Bytes, Get-UTF8Code;
+function Get-UTF8Bytes() {
+  Param (
+    [System.Int32]$Unicode
+  );
+  [System.Byte[]]$Empty = @(); 
+  if(($Unicode -lt 0) -or ($Unicode -gt 0x0010FFFF)) {
+    return (,$Empty);
+  }
+  [System.Byte[]]$Bytes = @();
+  if($Unicode -lt 0x00000080) {      ## 1-byte
+    [System.Int32]$vv = $Unicode -band 0x0000007F; 
+    $vv    += 0x00;
+    $Bytes += $vv; 
+  }else{
+    if($Unicode -lt 0x00000800) {    ## 2-byte
+      [System.Int32]$vv = $Unicode -band 0x000007C0; 
+      $vv    /= 0x00000040; 
+      $vv    += 0xC0;
+      $Bytes += $vv; 
+    }else{
+      if($Unicode -lt 0x00010000) {  ## 3-byte
+        [System.Int32]$vv = $Unicode -band 0x0000F000; 
+        $vv    /= 0x00001000; 
+        $vv    += 0xE0
+        $Bytes += $vv; 
+      }else{                         ## 4-byte
+        [System.Int32]$vv = $Unicode -band 0x001C0000; 
+        $vv    /= 0x00040000; 
+        $vv    += 0xF0;
+        $Bytes += $vv;
+        [System.Int32]$vv = $Unicode -band 0x0003F000; 
+        $vv    /= 0x00001000; 
+        $vv    += 0x80;
+        $Bytes += $vv;
+      }
+      [System.Int32]$vv = $Unicode -band 0x00000FC0;
+      $vv    /= 0x00000040; 
+      $vv    += 0x80;
+      $Bytes += $vv; 
+    }
+    [System.Int32]$vv = $Unicode -band 0x0000003F; 
+    $vv      /= 0x00000001;
+    $vv      += 0x80;
+    $Bytes   += $vv; 
+  }
+  return (,$Bytes);
+}
+Export-ModuleMember -Function Get-FileUTF8Bytes, Get-UTF8Code, Get-UTF8Bytes;
