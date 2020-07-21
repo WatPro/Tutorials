@@ -119,4 +119,8 @@ function Get-UTF8Bytes() {
   }
   return (,$Bytes);
 }
+
+## Reference:  [UTF-8, a transformation format of ISO 10646](https://tools.ietf.org/html/rfc3629#section-3 "UTF-8 definition")
+
 Export-ModuleMember -Function Get-FileUTF8Bytes, Get-UTF8Code, Get-UTF8Bytes;
+
