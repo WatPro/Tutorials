@@ -40,6 +40,7 @@ Get-ChildItem |
       Select-Object -Property @{label='unicode';expression={[System.Convert]::ToInt32($_);}}, 
                               @{label='file';expression={${filename};}};
   } | 
+  Where-Object {$_.unicode -ge 0x80} |
   Export-Csv -LiteralPath './statistics2.tsv' -Delimiter "`t";
 
 Get-ChildItem |
