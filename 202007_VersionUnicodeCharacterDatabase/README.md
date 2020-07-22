@@ -3,7 +3,7 @@
  
 As of now (July 2020), some Unicode characters are [not supported](https://docs.teradata.com/reader/1Ms8rWHdBhcwr0PzwAWcDw/4RotpZHfnWvB674Awg0RNA "Charactersrs other than Unicode Basic Multilingual Plane version 6.0") by Teradata, 
 
-* Characters in Basic Multilingual Plane after Unicode versions 6.0, and
+* Characters in Basic Multilingual Plane after Unicode version 6.0, and
 
 * Characters in Supplementary Planes from all Unicode versions, i.e. characters consist of [four bytes](https://docs.teradata.com/reader/yKxpuYv1DGjVp_g62SgwBw/QwK6iAOuWMlLNZivGR5Yxw "Limitations in UTF8 support") in UTF-8 are not supported.
  
