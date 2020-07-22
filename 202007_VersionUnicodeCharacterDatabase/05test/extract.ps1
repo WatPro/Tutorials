@@ -17,17 +17,15 @@ Get-ChildItem |
       if( $Bytes.Length -le 0 ) {
         break;
       }
-      [System.String]$utf8s = $Bytes.ForEach({$_.toString('X2');}) -join ' '; 
       [System.Int32]$Code   = (Get-UTF8Code -Bytes $Bytes);
        1 | 
        Select-Object -Property @{label='unicode';expression={${Code}}},
-                               @{label='file';expression={$BaseName}},
-                               @{label='utf8';expression={$utf8s}};
+                               @{label='file';expression={$BaseName}};
     }
     $Reader.Close();
   } | 
   Where-Object {$_.unicode -ge 0x80} |
-  Export-Csv -LiteralPath './statistics.tsv' -Delimiter "`t";
+  Export-Csv -LiteralPath './statistics.tsv' -Delimiter "`t" -NoTypeInformation;
 
 Get-ChildItem |
   Where-Object {
@@ -41,7 +39,7 @@ Get-ChildItem |
                               @{label='file';expression={${filename};}};
   } | 
   Where-Object {$_.unicode -ge 0x80} |
-  Export-Csv -LiteralPath './statistics2.tsv' -Delimiter "`t";
+  Export-Csv -LiteralPath './statistics2.tsv' -Delimiter "`t" -NoTypeInformation;
 
 Get-ChildItem |
   Where-Object {
@@ -60,4 +58,5 @@ Get-ChildItem |
       label      ='utf8';
       expression = {(Get-UTF8Bytes -Unicode $_.unicode).ForEach({$_.toString('X2');});}
     } |
-  Export-Csv -LiteralPath './table.txt' -Delimiter "`t";
+  Export-Csv -LiteralPath './table.txt' -Delimiter "`t" -NoTypeInformation;
+
