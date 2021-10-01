@@ -1,4 +1,3 @@
-# Write your MySQL query statement below
 # Tested on MySQL Community Server - GPL, 8.0.21
 
 SELECT 
