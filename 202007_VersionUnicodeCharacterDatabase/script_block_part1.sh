@@ -30,7 +30,7 @@ ls ${folder_block}*.txt |
     version_t="${version_t##*_}"
     version_t="${version_t%.txt}"
     version="${version_t}"
-    versions="${version//./'\t'}"
+    versions="${version//./\t}"
     sed --silent '/^[0-9A-F]/p' "${line}" |
       sed 's/; /\t/g' |
       sed 's/\.\./\t/g' |
