@@ -57,3 +57,15 @@ aws s3api list-object-versions \
   done > s3version.log
 
 ```
+
+These codes employs utility [jq](https://github.com/stedolan/jq/releases/tag/jq-1.5 "jq version 1.5"). It can be downloaded as the script block below. For its usage, see [Manual](https://stedolan.github.io/jq/manual/v1.5/ "jq 1.5 Manual").
+ 
+```bash
+if [ ! -f 'jq' ]
+then
+  aws s3 cp s3://cdd-kpmg-mi-file-pool-prod/mitools/official/utility/jq/jq-1.5/jq-linux64 ./jq
+  chmod +x ./jq
+fi
+
+```
+
