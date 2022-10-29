@@ -113,7 +113,9 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
     except NotImplementedError as err:
       self.send_response(HTTPStatus.NOT_IMPLEMENTED)
     except OSError as err:
-      self.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)
+      self.send_response(HTTPStatus.BAD_REQUEST)
+      ## The Content-MD5 or checksum value that you specified did not match what the server received.
+      ## https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
     except BaseException as err:
       self.send_response(HTTPStatus.FORBIDDEN)
     finally:
