@@ -7,6 +7,7 @@ serverdomain = 'http://localhost:8000/'
 uploadpath   = 'upload/'
 baseurl      = urljoin(serverdomain,uploadpath)
 
+
 def post(query, data, length = None, md5 = None):
   url = urlparse(baseurl)._replace(query=query).geturl()
   req = Request(url=url, data=data, method='POST')
@@ -34,26 +35,49 @@ def get_md5(file):
   except BaseException as err:
     return None
 
+def retry(file, trycount=5, filename='UNKNOWN'):
+  from os.path import getsize
+  while trycount>=0:
+    try:
+      md5_base64 = get_md5(file)
+      length     = getsize(file)
+      with open(file,'rb') as f:
+        print('SENDING {}'.format(filename)) 
+        post(filename, f, length=length, md5=md5_base64)
+      return True
+    except BaseException as err:
+      print(err)
+    finally:
+      trycount -= 1
+  print('FATAL : {}'.format(file))
+  return False
+
+
 def main():
   from sys import argv
-  from os import scandir
-  from os.path import isdir, join, getsize
+  from os import scandir, rename
+  from os.path import isdir, join
   from re import fullmatch
-  dir = 'test'
+  dirsource = 'test'
+  dirdone   = 'done'
+  movedone  = False
   if len(argv)>=2:
-    dir = argv[1]
-  if isdir(dir):
-    with scandir(dir) as it:
+    dirsource = argv[1]
+  if len(argv)>=3:
+    dirdone   = argv[1]
+  if isdir(dirdone):
+    movedone = True
+  if isdir(dirsource):
+    with scandir(dirsource) as it:
       for entry in it:
         if entry.is_file() and fullmatch(r'[0-9a-zA-Z._-]+',entry.name):
           filename   = entry.name
-          filepath   = join(dir,filename)
-          md5_base64 = get_md5(filepath)
-          length     = getsize(filepath) 
-          with open(filepath,'rb') as f:
-            print('SENDING {}'.format(filename))
-            post(filename, f, length=length, md5=md5_base64)
+          filepath   = join(dirsource,filename)
+          isdone     = retry(file=filepath, trycount=10, filename=filename)
+          if movedone and isdone:
+            donepath = join(dirdone,filename)
+            rename(filepath,donepath)
+
 
 if __name__ == '__main__':
   main()  
-  
