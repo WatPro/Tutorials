@@ -7,10 +7,9 @@ serverdomain = 'http://localhost:8000/'
 uploadpath   = 'upload/'
 baseurl      = urljoin(serverdomain,uploadpath)
 
-
-def post(query, data, length = None, md5 = None):
+def put(query, data, length = None, md5 = None):
   url = urlparse(baseurl)._replace(query=query).geturl()
-  req = Request(url=url, data=data, method='POST')
+  req = Request(url=url, data=data, method='PUT')
   if length is not None:
     req.add_header('Content-Length', length)
   if md5 is not None:
@@ -43,7 +42,7 @@ def retry(file, trycount=5, filename='UNKNOWN'):
       length     = getsize(file)
       with open(file,'rb') as f:
         print('SENDING {}'.format(filename)) 
-        post(filename, f, length=length, md5=md5_base64)
+        put(filename, f, length=length, md5=md5_base64)
       return True
     except BaseException as err:
       print(err)
@@ -64,7 +63,7 @@ def main():
   if len(argv)>=2:
     dirsource = argv[1]
   if len(argv)>=3:
-    dirdone   = argv[1]
+    dirdone   = argv[2]
   if isdir(dirdone):
     movedone = True
   if isdir(dirsource):
@@ -81,3 +80,4 @@ def main():
 
 if __name__ == '__main__':
   main()  
+  

@@ -54,12 +54,12 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
           break
         save_f.write(buffer)
         remain_length -= read_length
-        print('    remaining {}'.format(remain_length))
+      print('    remaining {}'.format(remain_length))
     except BaseException as err:
       self.connection.settimeout(pretimeout)
       raise err
 
-  def do_POST(self):
+  def do_PUT(self):
     from http import HTTPStatus ## https://docs.python.org/3/library/http.html#http-status-codes
     from socket import timeout
     from urllib.parse import urlparse
