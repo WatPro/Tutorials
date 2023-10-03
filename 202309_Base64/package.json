@@ -1,0 +1,15 @@
+{
+  "name": "202309_base64",
+  "version": "1.0.0",
+  "description": "```bash npm run test ## npm test ## or bash test.sh",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.1.1"
+  }
+}
