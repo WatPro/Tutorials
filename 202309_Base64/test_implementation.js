@@ -96,4 +96,3 @@ for (const category of ['BASE16','BASE32','BASE64']) {
 }
 
 
-// https://nodejs.dev/en/learn/working-with-folders-in-nodejs/

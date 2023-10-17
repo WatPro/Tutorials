@@ -22,17 +22,17 @@ curl "${urlrfc}" |
   ) | 
   python3 -c 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)],indent=4))' > "${filerfc}"
 
-
-## https://github.com/agnoster/base32-js/blob/master/test/base32-test.coffee
-## https://github.com/agnoster/base32-js/blob/master/README.md
-
-file32='BASE32.json'
+urlrfc='https://www.rfc-editor.org/rfc/rfc6238.txt'
+filerfc='TOTP.json'
 
 (
-echo 'Category,Input,Output' & 
-cat << END_OF_FILE | sed 's/"\([^"*]*\)"$/"\U\1"/'
-BASE32,"lowercase UPPERCASE 1234567 !@#$%^&*","dhqqetbjcdgq6t90an850haj8d0n6h9064t36d1n6rvj08a04cj2aqh658"
-BASE32,"Hello World","91jprv3f41bpywkccg50"
-BASE32,"Wow, it really works!","axqqeb10d5u20wk5c5p6ry90exqq4uvk44"
-END_OF_FILE
-) | python3 -c 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)],indent=4))' > "${file32}"
+echo 'Second,TOTP,Mode,Secret' &
+curl "${urlrfc}" |
+  sed '0,/^Appendix B.[ ]\+Test Vectors$/d' |
+  sed '/^[ ]*Table 1: TOTP Table[ ]*$/,$d' |
+  sed --silent 's/^[ ]*|\([ 0-9]*\)|[^|]*|[^|]*| \([0-9]\+\) |[ ]*\([^ |]*\)[ ]*|[ ]*$/\1,"\2",\3,\3/p' |
+  sed 's/,SHA1$/,"12345678901234567890"/' |
+  sed 's/,SHA256$/,"12345678901234567890123456789012"/' |
+  sed 's/,SHA512$/,"1234567890123456789012345678901234567890123456789012345678901234"/'
+) | 
+  python3 -c 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)],indent=4))' > "${filerfc}"
