@@ -26,11 +26,11 @@ urlrfc='https://www.rfc-editor.org/rfc/rfc6238.txt'
 filerfc='TOTP.json'
 
 (
-echo 'Second,TOTP,Mode,Secret' &
+echo 'Seconds,TOTP,Digits,Mode,Secret' &
 curl "${urlrfc}" |
   sed '0,/^Appendix B.[ ]\+Test Vectors$/d' |
   sed '/^[ ]*Table 1: TOTP Table[ ]*$/,$d' |
-  sed --silent 's/^[ ]*|\([ 0-9]*\)|[^|]*|[^|]*| \([0-9]\+\) |[ ]*\([^ |]*\)[ ]*|[ ]*$/\1,"\2",\3,\3/p' |
+  sed --silent 's/^[ ]*|[ ]*\([0-9]*\)[ ]*|[^|]*|[^|]*| \([0-9]\+\) |[ ]*\([^ |]*\)[ ]*|[ ]*$/\1,"\2",8,\3,\3/p' |
   sed 's/,SHA1$/,"12345678901234567890"/' |
   sed 's/,SHA256$/,"12345678901234567890123456789012"/' |
   sed 's/,SHA512$/,"1234567890123456789012345678901234567890123456789012345678901234"/'
