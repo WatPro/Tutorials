@@ -25,59 +25,59 @@ let Base16;
       r: remainder
     };
   };
-  const g = function(b=6) {
-    const size = 2**b;
-    const mask = size-1;
-    const bobj = {
-      _map: maps[b],
-      stringify: function(wa) {
-        wa.clamp();
-        const w    = wa.words;
-        const s    = wa.sigBytes;
-        const sbit = s*8;
-        const map  = this._map;
-        const v = [];
-        for (let ii=0; ii<sbit; ii+=b) { // process b bits each time
-          let u           = 0;
+  const g = function(bitLen=6) {
+    const size    = 2**bitLen;
+    const mask    = size-1;
+    const baseObj = {
+      _map: maps[bitLen],
+      stringify: function(wordArray) {
+        wordArray.clamp();
+        const words    = wordArray.words;
+        const sigBytes = wordArray.sigBytes;
+        const sigBits   = sigBytes*8;
+        const map       = this._map;
+        const baseChars = [];
+        for (let ii=0; ii<sigBits; ii+=bitLen) { // process `bitLen` bits each time
+          let value       = 0;
           let {q:jj,r:kk} = division(ii,8);
-          let shift       = 8-b-kk;
-          let uo          =  w[(jj)>>2] >>> 8*(3-(jj)%4);
+          let shift       = (8-bitLen)-kk;
+          let valu0       =  words[(jj)>>2] >>> 8*(3-(jj)%4);
           if (shift >= 0) {
-            u |= (uo >>> shift);
+            value |= (valu0 >>> shift);
           } else {
-            uo    &= mask;
-            u     |= (uo << (-shift));
+            valu0 &= mask;
+            value |= (valu0 << (-shift));
             shift += 8;
-            uo     =  w[(jj+1)>>2] >>> 8*(3-(jj+1)%4);
-            u     |= (uo >>>  shift);
+            valu0  =  words[(jj+1)>>2] >>> 8*(3-(jj+1)%4);
+            value |= (valu0 >>>  shift);
           }
-          u    &= mask;
-          let c = map.charAt(u);
-          v.push(c);
+          value    &= mask;
+          let char  = map.charAt(value);
+          baseChars.push(char);
         }
-        const padding = map.charAt(size);
-        if (padding !== '') {
-          for (; (v.length * b) % 8 !== 0; ) {
-            v.push(padding);
+        const paddingChar = map.charAt(size);
+        if (paddingChar !== '') {
+          for (; (baseChars.length * bitLen) % 8 !== 0; ) {
+            baseChars.push(paddingChar);
           }
         }
-        return v.join('');
+        return baseChars.join('');
       },
-      parse: function(t) {
-        let l    = t.length;
-        let m    = this._map;
-        let rMap = this._reverseMap;
-        if (rMap===undefined) {
-          rMap = this._reverseMap = [];
-          for (let ii = 0; ii < m.length; ii++) {
-            rMap[m.charCodeAt(ii)] = ii;
+      parse: function(baseStr) {
+        let baseStrLength = baseStr.length;
+        let map           = this._map;
+        let reverseMap    = this._reverseMap;
+        if (reverseMap===undefined) {
+          reverseMap = this._reverseMap = [];
+          for (let ii = 0; ii < map.length; ii++) {
+            reverseMap[map.charCodeAt(ii)] = ii;
           }
         }
-        let padding = m.charAt(size);
-        if (padding!='') {
-          let paddingAt = t.indexOf(padding);
+        let paddingChar = map.charAt(size);
+        if (paddingChar!='') {
+          let paddingAt = baseStr.indexOf(paddingChar);
           if ( paddingAt !== -1 ) {
-            l = paddingAt;
+            baseStrLength = paddingAt;
           }
         }
         return (function(t, l, m) {
@@ -85,8 +85,8 @@ let Base16;
           let s  = 0;
           for (let ii = 0; ii < l; ii +=1) {
             let c  = m[t.charCodeAt(ii)];
-            let {q:jj,r:kk} = division(ii*b,8);
-            let sh = (8-b)-kk;
+            let {q:jj,r:kk} = division(ii*bitLen,8);
+            let sh = (8-bitLen)-kk;
             if (sh>=0) {
               let csh   = c <<   (sh);
               csh      &= 0b11111111;
@@ -108,10 +108,10 @@ let Base16;
             }
           }
           return create(w, s)
-        })(t, l, rMap);
+        })(baseStr, baseStrLength, reverseMap);
       },
     };
-    return bobj;
+    return baseObj;
   };
   Base64 = g(6);
   Base32 = g(5);

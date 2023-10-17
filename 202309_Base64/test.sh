@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
-node index.js
+node test_implementation.js
 

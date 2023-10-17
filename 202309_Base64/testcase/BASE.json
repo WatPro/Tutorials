@@ -1,0 +1,142 @@
+[
+    {
+        "Category": "BASE64",
+        "Input": "",
+        "Output": ""
+    },
+    {
+        "Category": "BASE64",
+        "Input": "f",
+        "Output": "Zg=="
+    },
+    {
+        "Category": "BASE64",
+        "Input": "fo",
+        "Output": "Zm8="
+    },
+    {
+        "Category": "BASE64",
+        "Input": "foo",
+        "Output": "Zm9v"
+    },
+    {
+        "Category": "BASE64",
+        "Input": "foob",
+        "Output": "Zm9vYg=="
+    },
+    {
+        "Category": "BASE64",
+        "Input": "fooba",
+        "Output": "Zm9vYmE="
+    },
+    {
+        "Category": "BASE64",
+        "Input": "foobar",
+        "Output": "Zm9vYmFy"
+    },
+    {
+        "Category": "BASE32",
+        "Input": "",
+        "Output": ""
+    },
+    {
+        "Category": "BASE32",
+        "Input": "f",
+        "Output": "MY======"
+    },
+    {
+        "Category": "BASE32",
+        "Input": "fo",
+        "Output": "MZXQ===="
+    },
+    {
+        "Category": "BASE32",
+        "Input": "foo",
+        "Output": "MZXW6==="
+    },
+    {
+        "Category": "BASE32",
+        "Input": "foob",
+        "Output": "MZXW6YQ="
+    },
+    {
+        "Category": "BASE32",
+        "Input": "fooba",
+        "Output": "MZXW6YTB"
+    },
+    {
+        "Category": "BASE32",
+        "Input": "foobar",
+        "Output": "MZXW6YTBOI======"
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "",
+        "Output": ""
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "f",
+        "Output": "CO======"
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "fo",
+        "Output": "CPNG===="
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "foo",
+        "Output": "CPNMU==="
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "foob",
+        "Output": "CPNMUOG="
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "fooba",
+        "Output": "CPNMUOJ1"
+    },
+    {
+        "Category": "BASE32-HEX",
+        "Input": "foobar",
+        "Output": "CPNMUOJ1E8======"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "",
+        "Output": ""
+    },
+    {
+        "Category": "BASE16",
+        "Input": "f",
+        "Output": "66"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "fo",
+        "Output": "666F"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "foo",
+        "Output": "666F6F"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "foob",
+        "Output": "666F6F62"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "fooba",
+        "Output": "666F6F6261"
+    },
+    {
+        "Category": "BASE16",
+        "Input": "foobar",
+        "Output": "666F6F626172"
+    }
+]

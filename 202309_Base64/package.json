@@ -1,7 +1,7 @@
 {
   "name": "202309_base64",
   "version": "1.0.0",
-  "description": "```bash npm run test ## npm test ## or bash test.sh",
+  "description": "test customer implementation",
   "main": "index.js",
   "scripts": {
     "test": "bash test.sh"

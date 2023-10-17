@@ -1,0 +1,17 @@
+[
+    {
+        "Category": "BASE32",
+        "Input": "lowercase UPPERCASE 1234567 !@#$%^&*",
+        "Output": "DHQQETBJCDGQ6T90AN850HAJ8D0N6H9064T36D1N6RVJ08A04CJ2AQH658"
+    },
+    {
+        "Category": "BASE32",
+        "Input": "Hello World",
+        "Output": "91JPRV3F41BPYWKCCG50"
+    },
+    {
+        "Category": "BASE32",
+        "Input": "Wow, it really works!",
+        "Output": "AXQQEB10D5U20WK5C5P6RY90EXQQ4UVK44"
+    }
+]

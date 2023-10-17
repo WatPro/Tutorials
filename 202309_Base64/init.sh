@@ -6,6 +6,7 @@ cd "${thispath}"
 
 npm init --yes
 npm install crypto-js
+npm install base32
 
 folderbackup='backup/'
 mkdir --parent "${folderbackup%/}/"
