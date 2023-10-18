@@ -26,7 +26,7 @@ urlrfc='https://www.rfc-editor.org/rfc/rfc6238.txt'
 filerfc='TOTP.json'
 
 (
-echo 'Seconds,TOTP,Digits,Mode,Secret' &
+echo 'Seconds,Code,Digits,Mode,Secret' &
 curl "${urlrfc}" |
   sed '0,/^Appendix B.[ ]\+Test Vectors$/d' |
   sed '/^[ ]*Table 1: TOTP Table[ ]*$/,$d' |
