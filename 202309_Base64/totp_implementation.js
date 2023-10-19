@@ -15,13 +15,21 @@ const generateTOTP = function(key, seconds=0, digits=8, mode='HmacSHA1') {
     default:
       hashFunc = CryptoJS.HmacSHA1;
   }
-  const Hex         = CryptoJS.enc.Hex;
-  const hexParse    = function(h) {
+  const Hex      = CryptoJS.enc.Hex;
+  const hexParse = function(h) {
     return Hex.parse(h);
   };
+  const getByte = function(wordArray,location) {
+    const words = wordArray.words;
+    const shift = location%4;
+    const byte  = (location-shift)/4;
+    return words[byte]>>> 8*(3-shift);
+  };
   const HOTPComputation = function(hash, digits) {
-    const words  = hash.words;
-    const offset = words[4] & 0xf;
+    const words    = hash.words;
+    const sigBytes = hash.sigBytes;
+    const lastByte = getByte(hash,sigBytes-1)
+    const offset = lastByte & 0xf;
     const oset   = offset % 4;
     const bstart = (offset-oset)/4;
     let byte1 = words[bstart] << 8*oset;
